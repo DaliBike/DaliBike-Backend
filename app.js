@@ -3,7 +3,13 @@ const path = require('path')
 const app = express()
 const port = 3000
 
-const postRouter = require("./routers/posts")
+const userRouter = require("./routers/user");
+
+app.use("/user", router);
+
+app.get("*", (req, res) => {
+  res.send("404 Not Found");
+});
 
 app.set("view engine", "ejs");
 app.use(express.json());

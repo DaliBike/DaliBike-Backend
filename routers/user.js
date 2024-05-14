@@ -1,9 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const {
 
-} = require("../controllers/");
+router.get("/", (req, res) => {
+    response.render("user/mypage");
+});
 
-// user
-router.get("/user", )       // 유저의 정보 가져오기
-router.get("/user/login", ) // 유저 로그인
+router.get("/login", (req, res) => {
+    response.render("user/login");
+});
+
+router.get("/register", (req, res) => {
+    response.render("user/register");
+});
+
+module.exports = router;
