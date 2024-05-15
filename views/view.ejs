@@ -1,0 +1,39 @@
+<body>
+    <h2>실습 2. 로그인</h2>
+    <form name="login">
+      <fieldset>
+        <legend>ID</legend>
+        <input type="text" name="userid" />
+      </fieldset>
+      <fieldset>
+        <legend>Password</legend>
+        <input type="password" name="password" />
+      </fieldset>
+
+      <button type="button" onclick="clickLogin()">로그인</button>
+    </form>
+    <div class="login-result"></div>
+
+    <script>
+      function clickLogin() {
+        const form = document.forms["login"];
+        const data = {
+          userid: form.userid.value,
+          password: form.password.value
+        }
+
+        axios({
+          method: "POST",
+          url: "/user/login2",
+          data: data
+        }).then((res) => {
+          const {isSuccess, msg} = res.data
+
+          const element = document.querySelector(".login-result");
+          element.innerHTML = msg;
+
+          const color = isSuccess ? "blue" : "red";
+          element.style.color = color
+        })
+      }
+    </script>
