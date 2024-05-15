@@ -5,6 +5,8 @@ const {
 } = require("../controllers/");
 
 
-router.get("/post/list", )           // 게시글 목록 가져오기
-router.post("/post/upload", )   // 게시글 업로드
-router.delete("/post/delete", ) // 게시글 삭제
+router.get("/posts/veiwAllPost", )           // 게시글 목록 가져오기
+router.get("/posts/veiwCategoryPost/:category", ) // 카테고리별 게시글 조회
+router.get("/posts/selectPost", ) // 게시글 선택 조회
+router.post("/posts/insertPost", )   // 게시글 등록
+router.delete("/posts/deletePost", ) // 게시글 삭제

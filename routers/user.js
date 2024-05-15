@@ -13,4 +13,8 @@ router.get("/register", (req, res) => {
     response.render("user/register");
 });
 
+router.get("/post", (req, res) => {
+    response.render("user/mypage");
+});
+
 module.exports = router;
