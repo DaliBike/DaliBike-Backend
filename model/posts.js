@@ -67,7 +67,3 @@ const posts = {
 posts.initTable();
 
 module.exports = posts;
-const posts = require('./posts');
-const user = require('./user');
-
-module.exports = posts;
