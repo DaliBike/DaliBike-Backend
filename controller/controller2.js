@@ -1,3 +1,4 @@
+const { selectPost, insertPost, deletePost } = require('../model/posts');
 const {user} = require('../models');
 
 
@@ -18,6 +19,36 @@ const posts = {
             return data;
         } catch (err) {
             console.log("카테고리별 게시글 조회 컨트롤러 오류");
+        }
+    },
+
+    SelectPost: async (req, res) => {
+        const {postId} = req.params;
+        try {
+            const data = await Post.selectPost(postId);
+            return data;
+        } catch (err) {
+            console.log("게시글 선택조회 컨트롤러 오류");
+        }
+    },
+
+    InsertPost: async (req, res) => {
+        const {categoryId, title, content} = req.body;
+        try {
+            const data = await Post.insertPost(categoryId, title, content);
+            return data;
+        } catch (err) {
+            console.log("게시글 작성 컨트롤러 오류");
+        }
+    },
+
+    DeletePost: async (req, res) => {
+        const {postId} = req.params;
+        try {
+            const data = await Post.deletePost(postId);
+            return data;
+        } catch (err) {
+            console.log("게시글 삭제 컨트롤러 오류");
         }
     }
 }

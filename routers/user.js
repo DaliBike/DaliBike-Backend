@@ -9,4 +9,8 @@ router.post("/login", userController.login);
 router.get("/redundancy/id/:id", userController.idRedundancyCheck);
 router.get("/redundancy/nickname/:nickname", userController.nicknameRedundancyCheck);
 
+router.get("/post", (req, res) => {
+    response.render("user/mypage");
+});
+
 module.exports = router;
