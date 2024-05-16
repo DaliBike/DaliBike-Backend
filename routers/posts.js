@@ -1,9 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const {
-
-} = require("../controllers/");
-
 
 router.get("/post/list", )           // 게시글 목록 가져오기
 router.post("/post/upload", )   // 게시글 업로드

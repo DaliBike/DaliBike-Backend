@@ -16,6 +16,7 @@ const user = {
             const [result] = await mysql.query("INSERT INTO USER (USERId, Password, PhoneNumber, Name, Nickname, Points, subDate)"
             + "VALUES (?, ?, ?, ?, ?, 0, NOW())", [id, pw, phone, name, nickname]);
             console.log("유저 회원가입 완료");
+            return true;
         } catch (error) {
             console.log("유저 회원가입 오류 발생");
         }
