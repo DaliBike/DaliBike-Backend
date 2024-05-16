@@ -10,23 +10,25 @@ const user = {
             else                    res.json({ result: false });
         } catch (error) {
             console.log("유저 로그인 컨트롤러 오류 발생");
+            res.json({ result: "error" })
         }
     },
     register : async (req, res) => {
         const {id, pw, phone, name, nickname} = req.body;
         try {
             await user.register(id, pw, phone, name, nickname);
-            res.send("register success");
+            res.send({ result: true });
         } catch (error) {
             console.log("유저 회원가입 컨트롤러 오류 발생");
+            res.send({ result: false });
         }
     },
     idRedundancyCheck : async (req, res) => {
         const {id} = req.body;
         try {
             const result = await user.idRedundancyCheck(id);
-            if (result[0] === 0)    res.send("id not used");
-            else                    res.send("id used");
+            if (result[0] === 0)    res.json({ result: true });
+            else                    res.json({ result: false });
         } catch (error) {
             console.log("유저 아이디 중복체크 컨트롤러 오류 발생");
         }
@@ -35,8 +37,8 @@ const user = {
         const {nickname} = req.body;
         try {
             const result = await user.nicknameRedundancyCheck(nickname);
-            if (result[0] === 0)    res.send("nickname not used");
-            else                    res.send("nickname used");
+            if (result[0] === 0)    res.json({ result: true });
+            else                    res.json({ result: false });
         } catch (error) {
             console.log("유저 닉네임 중복체크 컨트롤러 오류 발생");
         }
