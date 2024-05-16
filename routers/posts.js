@@ -1,9 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const {
-
-} = require("../controllers/");
-
 
 router.get("/posts/veiwAllPost", )           // 게시글 목록 가져오기
 router.get("/posts/veiwCategoryPost/:category", ) // 카테고리별 게시글 조회

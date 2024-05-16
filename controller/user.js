@@ -6,8 +6,8 @@ const user = {
         const {id, pw} = req.body;
         try {
             const result = await user.login(id);
-            if (result[0] === pw)   res.send("login success");
-            else                    res.send("login fail");
+            if (result[0] === pw)   res.json({ result: true });
+            else                    res.json({ result: false });
         } catch (error) {
             console.log("유저 로그인 컨트롤러 오류 발생");
         }
@@ -40,8 +40,16 @@ const user = {
         } catch (error) {
             console.log("유저 닉네임 중복체크 컨트롤러 오류 발생");
         }
+    },
+    myPage : async (req, res) => {
+        const {id} = req.body;
+        try {
+            const result = await user.myPage(id);
+            return result;
+        } catch (error) {
+            console.log("유저 마이페이지 컨트롤러 오류 발생");
+        }
     }
-    
 }
 
 moodule.exports = user;

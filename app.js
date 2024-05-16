@@ -5,7 +5,7 @@ const port = 3000
 
 const userRouter = require("./routers/user");
 
-app.use("/user", router);
+app.use("/user", userRouter);
 
 app.get("*", (req, res) => {
   res.send("404 Not Found");
