@@ -27,18 +27,18 @@ const mapController = {
             const [result] = await report.getReportList();
             res.json(result);
         } catch (error) {
-            console.log("map: getStoreList 컨트롤러 오류 발생");
+            console.log("map: getReportList 컨트롤러 오류 발생");
         }
     },
-    getStoreDetails : async (req, res) => {
+    getReportDetails : async (req, res) => {
         try {
             const id = req.params.id;
-            const [result] = await report.getStoreDetails(id);
+            const [result] = await report.getReportDetails(id);
             res.json(result);
         } catch (error) {
-            console.log("map: getStoreDetails 컨트롤러 오류 발생");
+            console.log("map: getReportDetails 컨트롤러 오류 발생");
         }
     },
 }
 
-module.exports = userController;
+module.exports = mapController;
