@@ -5,7 +5,7 @@ const mysql = require('./config.js');
 const user = {
     login : async function(id) {
         try {
-            const [result] = await mysql.query("SELECT Password FROM user WHERE id = ?", [id]);
+            const [result] = await mysql.query("SELECT Password FROM USER WHERE USERId = ?", [id]);
             return result;
         } catch (error) {
             console.log("유저 데이터베이스 조회 오류 발생");
@@ -23,7 +23,8 @@ const user = {
     },
     myPage : async function(id) {
         try {
-            const [result] = await mysql.query("SELECT * FROM user WHERE id = ?", [id]);
+            const [result] = await mysql.query("SELECT * FROM USER WHERE USERId = ?", [id]);
+            console.log("유저 마이페이지 조회 완료")
             return result;
         } catch (error) {
             console.log("유저 데이터베이스 조회 오류 발생");
@@ -31,7 +32,7 @@ const user = {
     },
     idRedundancyCheck : async function(id) {
         try {
-            const [result] = await mysql.query("SELECT COUNT(*) FROM user WHERE id = ?", [id]);
+            const [result] = await mysql.query("SELECT COUNT(*) FROM USER WHERE USERId = ?", [id]);
             return result;
         } catch (error) {
             console.log("유저 데이터베이스 조회 오류 발생");
@@ -39,7 +40,7 @@ const user = {
     },
     nicknameRedundancyCheck : async function(nickname) {
         try {
-            const [result] = await mysql.query("SELECT COUNT(*) FROM user WHERE nickname = ?", [nickname]);
+            const [result] = await mysql.query("SELECT COUNT(*) FROM USER WHERE Nickname = ?", [nickname]);
             return result;
         } catch (error) {
             console.log("유저 데이터베이스 조회 오류 발생");

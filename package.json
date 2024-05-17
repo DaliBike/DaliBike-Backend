@@ -9,6 +9,7 @@
   "license": "ISC",
   "description": "Node Server for Dalibike",
   "dependencies": {
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "mysql2": "^3.9.7"
   }
 }
