@@ -4,7 +4,7 @@ const mapController = require("../controller/map");
 
 router.get("/air", mapController.getAirInjectorList);   // 위경도만
 
-router.get("/storage", recordController.getStorageList);    // 위경도만
+router.get("/storage", mapController.getStorageList);    // 위경도만
 
 router.get("/store", mapController.getStoreList);
 router.get("/store/:id", mapController.getStoreDetails);

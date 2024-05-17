@@ -4,7 +4,22 @@ const { mapFunc } = require("../routers/map");
 
 const mapController = {
     
-
+    getAirInjectorList : async (req, res) => {
+        try {
+            const [result] = await map.getAirInjectorList();
+            res.json(result);
+        } catch (error) {
+            console.log("map: getAirInjectorList 컨트롤러 오류 발생");
+        }
+    },
+    getStorageList : async (req, res) => {
+        try {
+            const [result] = await map.getStorageList();
+            res.json(result);
+        } catch (error) {
+            console.log("map: getStorageList 컨트롤러 오류 발생");
+        }
+    },
     getStoreList : async (req, res) => {
         try {
             const [result] = await map.getStoreList();
@@ -39,6 +54,43 @@ const mapController = {
             console.log("map: getReportDetails 컨트롤러 오류 발생");
         }
     },
+
+    getRentalStationList : async (req, res) => {
+        try {
+            const [result] = await report.getRentalStationList();
+            res.json(result);
+        } catch (error) {
+            console.log("map: getRentalStationList 컨트롤러 오류 발생");
+        }
+    },
+    getRentalStationDetails : async (req, res) => {
+        try {
+            const id = req.params.id;
+            const [result] = await report.getRentalStationDetails(id);
+            res.json(result);
+        } catch (error) {
+            console.log("map: getRentalStationDetails 컨트롤러 오류 발생");
+        }
+    },
+
+    getLodgingList : async (req, res) => {
+        try {
+            const [result] = await report.getLodgingList();
+            res.json(result);
+        } catch (error) {
+            console.log("map: getLodgingList 컨트롤러 오류 발생");
+        }
+    },
+    getLodgingDetails : async (req, res) => {
+        try {
+            const id = req.params.id;
+            const [result] = await report.getLodgingDetails(id);
+            res.json(result);
+        } catch (error) {
+            console.log("map: getLodgingDetails 컨트롤러 오류 발생");
+        }
+    },
+    
 }
 
 module.exports = mapController;
