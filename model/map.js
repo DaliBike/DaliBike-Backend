@@ -62,7 +62,7 @@ const map = {
     },
     getLodgingDetails : async function(id) {
         try {
-            const result = await mysql.query("SELECT BusinessName, LocationPhoneNumber, LocalAddress, LocationPostcode, RoadAddress, RoadPostcode FROM Lodging WHERE LodgingId = ?", [id]);
+            const result = await mysql.query("SELECT BusinessName, LocationPhoneNumber, LocationAddress, LocationPostcode, RoadAddress, RoadPostcode FROM Lodging WHERE LodgingId = ?", [id]);
             return result;
         } catch (error) {
             console.log("map: lodging details 조회 오류 발생");
