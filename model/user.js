@@ -19,6 +19,7 @@ const user = {
             return true;
         } catch (error) {
             console.log("user: register 오류 발생");
+            return false;
         }
     },
     myPage : async function(id) {
