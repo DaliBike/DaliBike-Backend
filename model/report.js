@@ -5,8 +5,7 @@ const mysql = require('./config.js');
 const report = {
     getReportList : async function() {
         try {
-            // db에 지도표시여부 추가 안되어있어서 해야함
-            const [result] = await mysql.query("SELECT ReportId, Latitude, Longitude FROM Store WHERE displayStatus = true");
+            const [result] = await mysql.query("SELECT ReportId, Latitude, Longitude FROM report WHERE DispStatus = 1");
             return result;
         } catch (error) {
             console.log("report: map list 조회 오류 발생");
@@ -14,7 +13,7 @@ const report = {
     },
     getReportDetails : async function(id) {
         try {
-            const [result] = await mysql.query("SELECT [나머지 정보] FROM Store WHERE StoreId = ?", [id]);
+            const [result] = await mysql.query("SELECT type, image FROM Store WHERE reportId = ?", [id]);
             return result;
         } catch (error) {
             console.log("report: detail 조회 오류 발생");
