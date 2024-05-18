@@ -23,7 +23,7 @@ const map = {
     getStoreList : async function() {
         try {
             const [result] = await mysql.query("SELECT StoreId, Latitude, Longitude FROM Store");
-            return result;
+            return [result];
         } catch (error) {
             console.log("map: store list 조회 오류 발생");
         }

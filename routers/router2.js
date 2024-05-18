@@ -1,9 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
-const {VeiwAllPost, VeiwAllPost, SelectPost, InsertPost, DeletePost} = require(
-    '../controller2/posts'
-);
+const postController = require("../controller/post");
 
 router.get("/posts/veiwAllPost", async (req, res) => {
     try {
