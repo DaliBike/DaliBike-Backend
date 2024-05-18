@@ -1,6 +1,8 @@
+"use strict";
+
 const mysql = require('./config.js');
 
-const posts = {
+const post = {
     //테이블 초기화 함수
     initTable: async function () {
         try {
@@ -16,9 +18,9 @@ const posts = {
     veiwAllPost: async function () {
         try {
             const [result] = await mysql.query("SELECT * FROM posts");
-            return [result];
+            return result;
         } catch (err) {
-            console.log("게시글 전체 조회 모델 오류");
+            console.log("post: 전체 조회 오류 발생");
         }
     },
 
@@ -26,9 +28,9 @@ const posts = {
     veiwCategoryPost: async function (category) {
         try {
             const [result] = await mysql.query("SELECT * FROM posts WHERE category =?", [category]);
-            return [result];
+            return result;
         } catch (err) {
-            console.log("카테고리별 게시글 조회 컨트롤러 오류");
+            console.log("post: 카테고리별 조회 오류 발생");
         }
     },
 
@@ -37,9 +39,9 @@ const posts = {
         try {
             const [result] = await mysql.query("SELECT * FROM posts WHERE id =?", [postId]);
             console.log(result)
-            return [result];
+            return result;
         } catch (err) {
-            console.log("게시글 선택 후 조회 모델 오류");
+            console.log("post: id 선택 후 조회 오류 발생");
         }
     },
 
@@ -47,9 +49,9 @@ const posts = {
     insertPost: async function(categoryId, title, content) {
         try {
             const [result] = await mysql.query("INSERT INTO posts (category, title, content) VALUES (?,?,?)", [category, title, content]);
-            return [result];
+            return result;
         } catch (err) {
-            console.log("게시글 작성 모델 오류");
+            console.log("post: 게시글 작성 오류 발생");
         }
     },
 
@@ -57,13 +59,13 @@ const posts = {
     deletePost: async function(postId) {
         try {
             const [result] = await mysql.query("DELETE FROM posts WHERE id =?", [postId]);
-            return [result];
+            return result;
         } catch (err) {
-            console.log("게시글 삭제 모델 오류");
+            console.log("post: 게시글 삭제 오류 발생");
         }
     }
 }
 
-posts.initTable();
+post.initTable();
 
-module.exports = posts;
+module.exports = post;

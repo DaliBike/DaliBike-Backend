@@ -6,7 +6,7 @@ const record = {
     viewToday : async function(id, date) {
         try {
             const [result] = await mysql.query("SELECT * FROM record WHERE id = ? AND date = ?", [id, date]);
-            return [result];
+            return result;
         } catch (error) {
             console.log("record: 오늘 기록 조회 오류 발생");
         }
@@ -15,7 +15,7 @@ const record = {
     viewMonth : async function(id, month) {
         try {
             const [result] = await mysql.query("SELECT * FROM record WHERE USERId = ? AND date LIKE ?", [id, month + "%"]);
-            return [result];
+            return result;
         } catch (error) {
             console.log("record: 월별 기록 조회 오류 발생");
         }
@@ -24,7 +24,7 @@ const record = {
     viewRank : async function(month) {
         try {
             const [result] = await mysql.query("SELECT USERId, SUM(dailyTime) AS totalTime FROM record WHERE date LIKE ? GROUP BY USERId ORDER BY totalTime DESC", [month + "%"]);
-            return [result];
+            return result;
         } catch (error) {
             console.log("record: 기록 랭킹 조회 오류 발생");
         }
