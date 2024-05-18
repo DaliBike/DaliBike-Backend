@@ -46,7 +46,7 @@ const post = {
     },
 
     // 게시글 작성
-    insertPost: async function(categoryId, title, content) {
+    insertPost: async function(category, title, content) {
         try {
             const [result] = await mysql.query("INSERT INTO posts (category, title, content) VALUES (?,?,?)", [category, title, content]);
             return result;
