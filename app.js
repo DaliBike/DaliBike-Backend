@@ -4,11 +4,11 @@ const app = express()
 const port = 3000
 
 const userRouter = require("./routers/user");
-const recordRouter = require("./routers/record");
+//const recordRouter = require("./routers/record");
 const mapRouter = require("./routers/map")
 
 app.use("/user", userRouter);
-app.use("/record", recordRouter);
+//app.use("/record", recordRouter);
 app.use("/map", mapRouter);
 
 app.get("*", (req, res) => {

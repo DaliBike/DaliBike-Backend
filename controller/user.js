@@ -1,5 +1,4 @@
 const user = require("../model/user");
-const { userfunc } = require("../routers/user");
 
 const userController = {
     login : async (req, res) => {

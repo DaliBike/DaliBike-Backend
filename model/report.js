@@ -25,4 +25,4 @@ const report = {
     }
 }
 
-module.exports = user;
+module.exports = report;

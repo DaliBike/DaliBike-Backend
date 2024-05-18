@@ -1,6 +1,5 @@
 const map = require("../model/map");
 const report = require("../model/report");
-const { mapFunc } = require("../routers/map");
 
 const mapController = {
     
@@ -57,7 +56,7 @@ const mapController = {
 
     getRentalStationList : async (req, res) => {
         try {
-            const [result] = await report.getRentalStationList();
+            const [result] = await map.getRentalStationList();
             res.json(result);
         } catch (error) {
             console.log("map: getRentalStationList 컨트롤러 오류 발생");
@@ -66,7 +65,7 @@ const mapController = {
     getRentalStationDetails : async (req, res) => {
         try {
             const id = req.params.id;
-            const [result] = await report.getRentalStationDetails(id);
+            const [result] = await map.getRentalStationDetails(id);
             res.json(result);
         } catch (error) {
             console.log("map: getRentalStationDetails 컨트롤러 오류 발생");
@@ -75,7 +74,7 @@ const mapController = {
 
     getLodgingList : async (req, res) => {
         try {
-            const [result] = await report.getLodgingList();
+            const [result] = await map.getLodgingList();
             res.json(result);
         } catch (error) {
             console.log("map: getLodgingList 컨트롤러 오류 발생");
@@ -84,7 +83,7 @@ const mapController = {
     getLodgingDetails : async (req, res) => {
         try {
             const id = req.params.id;
-            const [result] = await report.getLodgingDetails(id);
+            const [result] = await map.getLodgingDetails(id);
             res.json(result);
         } catch (error) {
             console.log("map: getLodgingDetails 컨트롤러 오류 발생");
