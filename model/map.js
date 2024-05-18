@@ -14,7 +14,7 @@ const map = {
     },
     getStorageList : async function(id) {
         try {
-            const [result] = await mysql.query("SELECT SFId, Latitude, Longitude  FROM StorageFacility", [id]);
+            const [result] = await mysql.query("SELECT SFId, Latitude, Longitude  FROM StorageFacility");
             return [result];
         } catch (error) {
             console.log("map: storageFacility list 조회 오류 발생");
@@ -46,7 +46,7 @@ const map = {
     },
     getRentalStationDetails : async function(id) {
         try {
-            const [result] = await mysql.query("SELECT RSName, UnmanRS, ManRS, RoadAddress, LocalAddress, StartTime, EndTime, DayOff, IsFare, Fare, ManagePhone FROM RentalStation WHERE StoreId = ?", [id]);
+            const [result] = await mysql.query("SELECT RSName, UnmanRS, ManRS, RoadAddress, LocalAddress, StartTime, EndTime, DayOff, IsFare, Fare, ManagePhone FROM RentalStation WHERE RSId = ?", [id]);
             return [result];
         } catch (error) {
             console.log("map: rental station detail 조회 오류 발생");
@@ -62,7 +62,7 @@ const map = {
     },
     getLodgingDetails : async function(id) {
         try {
-            const [result] = await mysql.query("SELECT BusinessName, LocationPhoneNumber, LocalAddress, LocationPostcode, RoadAddress, RoadPostcode FROM Lodging WHERE StoreId = ?", [id]);
+            const [result] = await mysql.query("SELECT BusinessName, LocationPhoneNumber, LocalAddress, LocationPostcode, RoadAddress, RoadPostcode FROM Lodging WHERE LodgingId = ?", [id]);
             return [result];
         } catch (error) {
             console.log("map: lodging details 조회 오류 발생");
