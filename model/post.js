@@ -3,17 +3,6 @@
 const mysql = require('./config.js');
 
 const post = {
-    //테이블 초기화 함수
-    initTable: async function () {
-        try {
-            const [result] = await mysql.query("SELECT * FROM posts");
-            console.log(result);
-        } catch (err) {
-            await mysql.query(
-                "CREATE TABLE posts (id INT AUTO_INCREMENT PRIMARY KEY, title VARCHAR(20),content VARCHAR(100))");
-        }
-    },
-
     //게시글 전체 조회
     veiwAllPost: async function () {
         try {
@@ -65,7 +54,5 @@ const post = {
         }
     }
 }
-
-post.initTable();
 
 module.exports = post;

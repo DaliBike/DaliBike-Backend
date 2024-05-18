@@ -3,9 +3,9 @@
 const mysql = require('./config.js');
 
 const user = {
-    login : async function(id) {
-        try {
-            const [result] = await mysql.query("SELECT Password FROM USER WHERE USERId = ?", [id]);
+    login : async function(id, pw) {
+        try {   // TRUE : 로그인 성공, FALSE : 로그인 실패
+            const [result] = await mysql.query("SELECT IF(COUNT(*) = 0, 'false', 'true') AS result FROM USER WHERE USERId = ? AND Password = ?", [id, pw]);
             return result;
         } catch (error) {
             console.log("user: login 조회 오류 발생");
@@ -31,17 +31,17 @@ const user = {
         }
     },
     idRedundancyCheck : async function(id) {
-        try {
-            const [result] = await mysql.query("SELECT COUNT(*) FROM USER WHERE USERId = ?", [id]);
-            return [result];
+        try {   // TRUE : 사용가능, FALSE : 중복
+            const [result] = await mysql.query("SELECT IF(COUNT(*) = 0, 'true', 'false') AS result FROM USER WHERE USERId = ?", [id]);
+            return result;
         } catch (error) {
             console.log("user: id 중복 조회 오류 발생");
         }
     },
     nicknameRedundancyCheck : async function(nickname) {
-        try {
-            const [result] = await mysql.query("SELECT COUNT(*) FROM USER WHERE Nickname = ?", [nickname]);
-            return [result];
+        try {   // TRUE : 사용가능, FALSE : 중복
+            const [result] = await mysql.query("SELECT IF(COUNT(*) = 0, 'true', 'false') AS result FROM USER WHERE Nickname = ?", [nickname]);
+            return result;
         } catch (error) {
             console.log("user: nickname 중복 조회 오류 발생");
         }
