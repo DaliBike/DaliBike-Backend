@@ -23,7 +23,7 @@ const user = {
     },
     myPage : async function(id) {
         try {
-            const [result] = await mysql.query("SELECT * FROM USER WHERE USERId = ?", [id]);
+            const [result] = await mysql.query("SELECT USERId, Name, Nickname, Points, subDate FROM USER WHERE USERId = ?", [id]);
             return [result];
         } catch (error) {
             console.log("user: mypage 조회 오류 발생");
