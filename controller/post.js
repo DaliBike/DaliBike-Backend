@@ -1,7 +1,7 @@
 const post = require("../model/post");
 
 const postController = {
-    VeiwAllPost: async (req, res) => {
+    ViewAllPost: async (req, res) => {
         try {
             const result = await post.ViewAllPost();
             res.json(result);
@@ -10,7 +10,7 @@ const postController = {
         }
     },
 
-    VeiwCategoryPost: async (req, res) => {
+    ViewCategoryPost: async (req, res) => {
         const category = req.params.category;
         try {
             const result = await post.ViewCategoryPost(category);
