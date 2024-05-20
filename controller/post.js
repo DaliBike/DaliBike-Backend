@@ -3,7 +3,7 @@ const post = require("../model/post");
 const postController = {
     VeiwAllPost: async (req, res) => {
         try {
-            const result = await post.VeiwAllPost();
+            const result = await post.ViewAllPost();
             res.json(result);
         } catch (err) {
             console.log("post: 게시글 목록 조회 컨트롤러 오류")
@@ -13,7 +13,7 @@ const postController = {
     VeiwCategoryPost: async (req, res) => {
         const category = req.params.category;
         try {
-            const result = await post.VeiwCategoryPost(category);
+            const result = await post.ViewCategoryPost(category);
             res.json(result);
         } catch (err) {
             console.log("post: 게시글 목록 조회 컨트롤러 오류")
@@ -48,7 +48,16 @@ const postController = {
         } catch (err) {
             console.log("post: 게시글 삭제 컨트롤러 오류");
         }
-    }
+    },
+
+    LikePost : async (req, res) => {
+    },
+
+    WriteComment : async (req, res) => {
+    },
+
+    DeleteComment : async (req, res) => {
+    },
 }
 
 module.exports = postController;
