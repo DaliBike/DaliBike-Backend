@@ -22,7 +22,7 @@ const postController = {
     },
 
     ViewMyPost: async (req, res) => {
-        const {userId} = req.params.id;
+        const {userId} = req.params.userId;
         try {
             const result = await post.viewMyPost(userId);
             res.json(result);
