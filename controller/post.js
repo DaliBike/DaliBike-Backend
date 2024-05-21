@@ -3,7 +3,7 @@ const post = require("../model/post");
 const postController = {
     ViewAllPost: async (req, res) => {
         try {
-            const result = await post.ViewAllPost();
+            const result = await post.viewAllPost();
             res.json(result);
         } catch (err) {
             console.log("post: 게시글 목록 조회 컨트롤러 오류")
@@ -13,7 +13,7 @@ const postController = {
     ViewCategoryPost: async (req, res) => {
         const category = req.params.category;
         try {
-            const result = await post.ViewCategoryPost(category);
+            const result = await post.viewCategoryPost(category);
             res.json(result);
         } catch (err) {
             console.log("post: 게시글 목록 조회 컨트롤러 오류")

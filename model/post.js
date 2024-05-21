@@ -4,7 +4,7 @@ const mysql = require('./config.js');
 
 const post = {
     //게시글 전체 조회
-    veiwAllPost: async function () {
+    viewAllPost: async function () {
         try {
             const [result] = await mysql.query("SELECT * FROM Post");
             return result;
@@ -14,7 +14,7 @@ const post = {
     },
 
     // 카테고리별 게시글 조회
-    veiwCategoryPost: async function (category) {
+    viewCategoryPost: async function (category) {
         try {
             const [result] = await mysql.query("SELECT * FROM Post WHERE category =?", [category]);
             return result;
