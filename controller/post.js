@@ -1,5 +1,6 @@
 const {commit} = require("../model/config");
 const post = require("../model/post");
+const comment = require("../model/comment");
 
 const postController = {
     ViewAllPost: async (req, res) => {

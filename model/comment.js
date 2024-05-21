@@ -27,5 +27,20 @@ const comment = {
         } catch (err) {
             console.log("post: 댓글 삭제 오류 발생");
         }
+    },
+
+    getComment: async function (postId) {
+        try {
+            const [result] = await mysql.query(
+                "SELECT * FROM Comment WHERE PostId =?",
+                [postId]
+            );
+            return result;
+        } catch (err) {
+            console.log("post: 댓글 조회 오류 발생");
+        }
     }
+
 }
+
+module.exports = comment;
