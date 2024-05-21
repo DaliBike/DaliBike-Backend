@@ -8,7 +8,7 @@ const post = {
     viewAllPost: async function () {
         try {
             // const [result] = await mysql.query("SELECT p.Title, p.Content, p.Like, p.Category, u.Nickname COUNT(*) AS CommentCount FROM Comment c JOIN Post p ON c.PostId = p.PostId;FROM Post p JOIN USER u ON p.USERId = u.USERId;");
-            const [result] = await mysql.query("SELECT p.Title, p.Content, p.Like, p.Category, u.Nickname COUNT(*) AS CommentCount FROM Comment c JOIN Post p ON c.PostId = p.PostId;FROM Post p JOIN USER u ON p.USERId = u.USERId;");
+            const [result] = await mysql.query("SELECT p.Title, p.Content, p.Like, p.Category, u.Nickname, COUNT(c.CommentId) AS CommentCount FROM Post p JOIN USER u ON p.USERId = u.USERId LEFT JOIN Comment c ON p.PostId = c.PostId GROUP BY p.PostId, p.Title, p.Content, p.Like, p.Category, u.Nickname;");
 
             return result;
         } catch (err) {
@@ -43,9 +43,8 @@ const post = {
     // 게시글 선택 후 조회
     selectPost: async function (postId) {
         try {
-            const [result] = await mysql.query("SELECT p.PostId, p.Title, p.Content, p.Like, p.Category, u.NickName FROM Post p JOIN USER u ON p.USERId = u.USERId JOIN Comment c ON p.PostId = c.PostId WHERE p.PostId = ?", [postId]);
+            const [result] = await mysql.query("SELECT p.PostId, p.Title, p.Content, p.Like, p.Category, u.NickName FROM Post p JOIN USER u ON p.USERId = u.USERId WHERE p.PostId = ?", [postId]);
             // const [result] = await mysql.query("SELECT p.PostId, p.Title, p.Content, p.Like, p.Category, u.Nickname AS PostAuthorNickname, c.Comment, cu.Nickname AS CommentAuthorNickname FROM Post p JOIN USER u ON p.USERId = u.USERId JOIN Comment c ON p.PostId = c.PostId JOIN USER cu ON c.USERId = cu.USERId WHERE p.PostId = ?;", [postId])
-            console.log(result)
             
             return result;
         } catch (err) {
