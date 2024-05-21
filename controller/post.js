@@ -1,3 +1,4 @@
+const {commit} = require("../model/config");
 const post = require("../model/post");
 
 const postController = {
@@ -21,7 +22,7 @@ const postController = {
     },
 
     SelectPost: async (req, res) => {
-        const { postId } = req.params.id;
+        const {postId} = req.params.id;
         try {
             const result = await post.selectPost(postId);
             res.json(result);
@@ -41,7 +42,7 @@ const postController = {
     },
 
     DeletePost: async (req, res) => {
-        const {postId} = req.body;
+        const {postId} = req.params.id;
         try {
             const result = await post.deletePost(postId);
             res.json(result);
@@ -50,14 +51,35 @@ const postController = {
         }
     },
 
-    LikePost : async (req, res) => {
+    LikePost: async (req, res) => {
+        const {postId} = req.params.id;
+        try {
+            const result = await post.likePost(postId);
+            res.json(result);
+        } catch (err) {
+            console.log("post: 게시글 좋아요 컨트롤러 오류");
+        }
     },
 
-    WriteComment : async (req, res) => {
+    WriteComment: async (req, res) => {
+        const {postId, comment} = req.params.id;
+        try {
+            const result = await post.writeComment(postId, comment);
+            res.json(result);
+        } catch (err) {
+            console.log("post: 게시글 댓글 작성 컨트롤러 오류");
+        }
     },
 
-    DeleteComment : async (req, res) => {
-    },
+    DeleteComment: async (req, res) => {
+        const {commentId} = req.params.id;
+        try {
+            const result = await post.deleteComment(commentId);
+            res.json(result);
+        } catch (err) {
+            console.log("post: 게시글 댓글 삭제 컨트롤러 오류");
+        }
+    }
 }
 
 module.exports = postController;
