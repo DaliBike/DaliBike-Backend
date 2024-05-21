@@ -1,5 +1,6 @@
 "use strict";
 
+const {WriteComment} = require('../controller/post.js');
 const mysql = require('./config.js');
 
 const post = {
@@ -16,7 +17,10 @@ const post = {
     // 카테고리별 게시글 조회
     veiwCategoryPost: async function (category) {
         try {
-            const [result] = await mysql.query("SELECT * FROM Post WHERE category =?", [category]);
+            const [result] = await mysql.query(
+                "SELECT * FROM Post WHERE Category =?",
+                [category]
+            );
             return result;
         } catch (err) {
             console.log("post: 카테고리별 조회 오류 발생");
@@ -24,9 +28,9 @@ const post = {
     },
 
     // 게시글 선택 후 조회
-    selectPost: async function(postId) {
+    selectPost: async function (postId) {
         try {
-            const [result] = await mysql.query("SELECT * FROM Post WHERE id =?", [postId]);
+            const [result] = await mysql.query("SELECT * FROM Post WHERE PostId =?", [postId]);
             console.log(result)
             return result;
         } catch (err) {
@@ -35,9 +39,12 @@ const post = {
     },
 
     // 게시글 작성
-    insertPost: async function(category, title, content) {
+    insertPost: async function (category, title, content) {
         try {
-            const [result] = await mysql.query("INSERT INTO Post (category, title, content) VALUES (?,?,?)", [category, title, content]);
+            const [result] = await mysql.query(
+                "INSERT INTO Post (Category, Title, Tontent) VALUES (?,?,?)",
+                [category, title, content]
+            );
             return result;
         } catch (err) {
             console.log("post: 게시글 작성 오류 발생");
@@ -45,16 +52,50 @@ const post = {
     },
 
     // 게시글 삭제
-    deletePost: async function(postId) {
+    deletePost: async function (postId) {
         try {
-            const [result] = await mysql.query("DELETE FROM Post WHERE id =?", [postId]);
+            const [result] = await mysql.query("DELETE FROM Post WHERE PostId =?", [postId]);
             return result;
         } catch (err) {
             console.log("post: 게시글 삭제 오류 발생");
         }
+    },
+
+    //게시글 좋아요
+    likePost: async function (postId) {
+        try {
+            const [result] = await mysql.query("SELECT * FROM Post WHERE PostId =?", [postId]);
+            return result;
+        } catch (err) {
+            console.log("post: 게시글 좋아요 오류 발생");
+        }
+    },
+
+    //댓글
+    WriteComment: async function (postId, comment) {
+        try {
+            const [result] = await mysql.query(
+                "INSERT INTO Post (postId, Comment) VALUES (?,?)",
+                [postId, comment]
+            );
+            return result;
+        } catch (err) {
+            console.log("post: 댓글 작성 오류 발생");
+        }
+    },
+
+    deleteComment: async function (commentId) {
+        try {
+            const [result] = await mysql.query(
+                "DELETE FROM Comment WHERE id =?",
+                [commentId]
+            );
+            return result;
+        } catch (err) {
+            console.log("post: 댓글 삭제 오류 발생");
+        }
     }
 }
 
-// 댓글기능, 좋아요기능 등등 추가해야 할것들 쪼매남음
 
 module.exports = post;
