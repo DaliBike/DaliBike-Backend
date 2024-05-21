@@ -7,11 +7,13 @@ const userRouter = require("./routers/user");
 //const recordRouter = require("./routers/record");
 const mapRouter = require("./routers/map")
 const postRouter = require("./routers/post");
+const reportRouter = require("./routers/report");
 
 app.use("/user", userRouter);
 //app.use("/record", recordRouter);
 app.use("/map", mapRouter);
 app.use("/post", postRouter);
+app.use("/report", reportRouter);
 
 app.get("*", (req, res) => {
   res.send("404 Not Found");
