@@ -32,7 +32,7 @@ const postController = {
     },
 
     SelectPost: async (req, res) => {
-        const postId = req.params.id;
+        const postId = req.params.postId;
         try {
             const result = await post.selectPost(postId);
             res.json(result);
@@ -52,7 +52,7 @@ const postController = {
     },
 
     DeletePost: async (req, res) => {
-        const {postId} = req.params.id;
+        const {postId} = req.params.postId;
         try {
             const result = await post.deletePost(postId);
             res.json(result);

@@ -41,11 +41,13 @@ const post = {
     // 게시글 선택 후 조회
     selectPost: async function (postId) {
         try {
-            const [result] = await mysql.query("SELECT * FROM Post WHERE PostId =?", [postId]);
+            // const [result] = await mysql.query("SELECT p.PostId, p.Title, p.Content, p.Like, p.Category, u.NickName, c.Comment FROM Post p JOIN USER u ON p.USERId = u.USERId JOIN Comment c ON p.PostId = c.PostId WHERE p.PostId = ?", [postId]);
+            const [result] = await mysql.query("SELECT p.PostId, p.Title, p.Content, p.Like, p.Category, u.Nickname AS PostAuthorNickname, c.Comment, cu.Nickname AS CommentAuthorNickname FROM Post p JOIN USER u ON p.USERId = u.USERId JOIN Comment c ON p.PostId = c.PostId JOIN USER cu ON c.USERId = cu.USERId WHERE p.PostId = ?;", [postId])
             console.log(result)
+            
             return result;
         } catch (err) {
-            console.log("post: id 선택 후 조회 오류 발생");
+            console.log("post: id 선택 후 조회 모델 오류 발생");
         }
     },
 
