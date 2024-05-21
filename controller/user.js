@@ -3,6 +3,7 @@ const user = require("../model/user");
 const userController = {
     login : async (req, res) => {
         const {id, pw} = req.body;
+        console.log(id, pw);
         try {
             const result = await user.login(id, pw);
             res.json(result);
