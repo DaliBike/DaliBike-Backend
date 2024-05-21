@@ -22,7 +22,7 @@ const postController = {
     },
 
     ViewMyPost: async (req, res) => {
-        const {userId} = req.params.userId;
+        const userId = req.params.userId;
         try {
             const result = await post.viewMyPost(userId);
             res.json(result);
@@ -32,7 +32,7 @@ const postController = {
     },
 
     SelectPost: async (req, res) => {
-        const {postId} = req.params.id;
+        const postId = req.params.id;
         try {
             const result = await post.selectPost(postId);
             res.json(result);
