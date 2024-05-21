@@ -2,13 +2,6 @@
 
 const mysql = require('./config.js');
 const multer = require('multer');
-const { multerConfig } = require('../config');
-
-const upload = multer(multerConfig);
-
-module.exports = {
-  upload,
-};
 
 const report = {
     getReportList : async function() {
