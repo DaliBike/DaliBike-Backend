@@ -35,6 +35,13 @@ const postController = {
         const postId = req.params.postId;
         try {
             const result = await post.selectPost(postId);
+            const result2 = await comment.getComment(postId);
+            
+            result = {
+                ...result,
+                comments: result2,
+            }
+
             res.json(result);
         } catch (err) {
             console.log("post: 게시글 선택 컨트롤러 오류")
