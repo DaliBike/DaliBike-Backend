@@ -7,7 +7,9 @@ const post = {
     //게시글 전체 조회
     viewAllPost: async function () {
         try {
-            const [result] = await mysql.query("SELECT p.PostId, p.Title, p.Content, p.Like, p.Category, u.Nickname FROM Post p JOIN USER u ON p.USERId = u.USERId;");
+            // const [result] = await mysql.query("SELECT p.Title, p.Content, p.Like, p.Category, u.Nickname COUNT(*) AS CommentCount FROM Comment c JOIN Post p ON c.PostId = p.PostId;FROM Post p JOIN USER u ON p.USERId = u.USERId;");
+            const [result] = await mysql.query("SELECT p.Title, p.Content, p.Like, p.Category, u.Nickname COUNT(*) AS CommentCount FROM Comment c JOIN Post p ON c.PostId = p.PostId;FROM Post p JOIN USER u ON p.USERId = u.USERId;");
+
             return result;
         } catch (err) {
             console.log("post: 전체 조회 오류 발생");
