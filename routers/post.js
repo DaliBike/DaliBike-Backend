@@ -8,7 +8,7 @@ router.get("/view/my/:userId", postController.ViewMyPost)  // 내 게시글 조�
 router.get("/view/:id", postController.SelectPost) // 게시글 선택 조회
 
 router.post("/upload", postController.InsertPost)   // 게시글 등록
-router.delete("/delete", postController.DeletePost) // 게시글 삭제
+router.delete("/delete/:postId", postController.DeletePost) // 게시글 삭제
 router.post("/like", postController.LikePost) // 게시글 좋아요
 
 module.exports = router;
