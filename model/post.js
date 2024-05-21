@@ -72,7 +72,7 @@ const post = {
     },
 
     //댓글
-    WriteComment: async function (postId, comment) {
+    writeComment: async function (postId, comment) {
         try {
             const [result] = await mysql.query(
                 "INSERT INTO Post (postId, Comment) VALUES (?,?)",
