@@ -1,6 +1,7 @@
 "use strict";
 
 const mysql = require('./config.js');
+const multer = require('multer');
 
 const report = {
     getReportList : async function() {
@@ -20,7 +21,7 @@ const report = {
         }
     },
     addReport : async function() {
-        // 이미지 업로드 구현 후 작성 예정
+        
     }
 }
 

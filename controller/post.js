@@ -1,5 +1,6 @@
 const {commit} = require("../model/config");
 const post = require("../model/post");
+const comment = require("../model/comment");
 
 const postController = {
     ViewAllPost: async (req, res) => {
@@ -32,9 +33,16 @@ const postController = {
     },
 
     SelectPost: async (req, res) => {
-        const postId = req.params.id;
+        const postId = req.params.postId;
         try {
             const result = await post.selectPost(postId);
+            const result2 = await comment.getComment(postId);
+            
+            result = {
+                ...result,
+                comments: result2,
+            }
+
             res.json(result);
         } catch (err) {
             console.log("post: 게시글 선택 컨트롤러 오류")
@@ -52,7 +60,7 @@ const postController = {
     },
 
     DeletePost: async (req, res) => {
-        const {postId} = req.params.id;
+        const {postId} = req.params.postId;
         try {
             const result = await post.deletePost(postId);
             res.json(result);

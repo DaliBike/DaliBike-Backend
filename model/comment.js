@@ -5,7 +5,7 @@ const mysql = require('./config.js');
 
 const comment = {
     //댓글
-    WriteComment: async function (postId, comment) {
+    writeComment: async function (postId, comment) {
         try {
             const [result] = await mysql.query(
                 "INSERT INTO Comment (PostId, Comment) VALUES (?,?)",
@@ -17,7 +17,7 @@ const comment = {
         }
     },
 
-    DeleteComment: async function (commentId) {
+    deleteComment: async function (commentId) {
         try {
             const [result] = await mysql.query(
                 "DELETE FROM Comment WHERE CommentId =?",
@@ -27,5 +27,20 @@ const comment = {
         } catch (err) {
             console.log("post: 댓글 삭제 오류 발생");
         }
+    },
+
+    getComment: async function (postId) {
+        try {
+            const [result] = await mysql.query(
+                "SELECT * FROM Comment WHERE PostId =?",
+                [postId]
+            );
+            return result;
+        } catch (err) {
+            console.log("post: 댓글 조회 오류 발생");
+        }
     }
+
 }
+
+module.exports = comment;

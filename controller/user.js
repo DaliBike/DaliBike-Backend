@@ -16,10 +16,10 @@ const userController = {
         const {id, pw, phone, name, nickname} = req.body;
         try {
             await user.register(id, pw, phone, name, nickname);
-            res.json({ result: "true" });
+            res.json({ result: 'true' });
         } catch (error) {
             console.log("user: register 컨트롤러 오류 발생");
-            res.json({ result: "false" });
+            res.json({ result: 'false' });
         }
     },
     idRedundancyCheck : async (req, res) => {

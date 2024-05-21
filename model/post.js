@@ -7,7 +7,9 @@ const post = {
     //게시글 전체 조회
     viewAllPost: async function () {
         try {
-            const [result] = await mysql.query("SELECT p.PostId, p.Title, p.Content, p.Like, p.Category, u.Nickname FROM Post p JOIN USER u ON p.USERId = u.USERId;");
+            // const [result] = await mysql.query("SELECT p.Title, p.Content, p.Like, p.Category, u.Nickname COUNT(*) AS CommentCount FROM Comment c JOIN Post p ON c.PostId = p.PostId;FROM Post p JOIN USER u ON p.USERId = u.USERId;");
+            const [result] = await mysql.query("SELECT p.Title, p.Content, p.Like, p.Category, u.Nickname COUNT(*) AS CommentCount FROM Comment c JOIN Post p ON c.PostId = p.PostId;FROM Post p JOIN USER u ON p.USERId = u.USERId;");
+
             return result;
         } catch (err) {
             console.log("post: 전체 조회 오류 발생");
@@ -41,11 +43,13 @@ const post = {
     // 게시글 선택 후 조회
     selectPost: async function (postId) {
         try {
-            const [result] = await mysql.query("SELECT * FROM Post WHERE PostId =?", [postId]);
+            const [result] = await mysql.query("SELECT p.PostId, p.Title, p.Content, p.Like, p.Category, u.NickName FROM Post p JOIN USER u ON p.USERId = u.USERId JOIN Comment c ON p.PostId = c.PostId WHERE p.PostId = ?", [postId]);
+            // const [result] = await mysql.query("SELECT p.PostId, p.Title, p.Content, p.Like, p.Category, u.Nickname AS PostAuthorNickname, c.Comment, cu.Nickname AS CommentAuthorNickname FROM Post p JOIN USER u ON p.USERId = u.USERId JOIN Comment c ON p.PostId = c.PostId JOIN USER cu ON c.USERId = cu.USERId WHERE p.PostId = ?;", [postId])
             console.log(result)
+            
             return result;
         } catch (err) {
-            console.log("post: id 선택 후 조회 오류 발생");
+            console.log("post: id 선택 후 조회 모델 오류 발생");
         }
     },
 
