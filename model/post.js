@@ -14,6 +14,7 @@ const post = {
         }
     },
 
+
     // 카테고리별 게시글 조회
     viewCategoryPost: async function (category) {
         try {
@@ -24,6 +25,16 @@ const post = {
             return result;
         } catch (err) {
             console.log("post: 카테고리별 조회 오류 발생");
+        }
+    },
+
+    
+    viewMyPost: async function (userId) {
+        try{
+            const [result] = await mysql.query("SELECT * FROM Post WHERE USERId =?", [userId]);
+            return result;
+        } catch(err){
+            console.log("post: 내 게시글 조회 오류 발생");
         }
     },
 
@@ -69,16 +80,8 @@ const post = {
         } catch (err) {
             console.log("post: 게시글 좋아요 오류 발생");
         }
-    },
-
-    viewMyPost: async function (userId) {
-        try{
-            const [result] = await mysql.query("SELECT * FROM Post WHERE USERId =?", [userId]);
-            return result;
-        } catch(err){
-            console.log("post: 내 게시글 조회 오류 발생");
-        }
     }
+
 
 }
 
