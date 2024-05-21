@@ -5,7 +5,7 @@ const mysql = require('./config.js');
 
 const post = {
     //게시글 전체 조회
-    veiwAllPost: async function () {
+    viewAllPost: async function () {
         try {
             const [result] = await mysql.query("SELECT * FROM Post");
             return result;
@@ -15,7 +15,7 @@ const post = {
     },
 
     // 카테고리별 게시글 조회
-    veiwCategoryPost: async function (category) {
+    viewCategoryPost: async function (category) {
         try {
             const [result] = await mysql.query(
                 "SELECT * FROM Post WHERE Category =?",
@@ -71,30 +71,15 @@ const post = {
         }
     },
 
-    //댓글
-    WriteComment: async function (postId, comment) {
-        try {
-            const [result] = await mysql.query(
-                "INSERT INTO Post (postId, Comment) VALUES (?,?)",
-                [postId, comment]
-            );
+    viewMyPost: async function (userId) {
+        try{
+            const [result] = await mysql.query("SELECT * FROM Post WHERE USERId =?", [userId]);
             return result;
-        } catch (err) {
-            console.log("post: 댓글 작성 오류 발생");
-        }
-    },
-
-    deleteComment: async function (commentId) {
-        try {
-            const [result] = await mysql.query(
-                "DELETE FROM Comment WHERE id =?",
-                [commentId]
-            );
-            return result;
-        } catch (err) {
-            console.log("post: 댓글 삭제 오류 발생");
+        } catch(err){
+            console.log("post: 내 게시글 조회 오류 발생");
         }
     }
+
 }
 
 
