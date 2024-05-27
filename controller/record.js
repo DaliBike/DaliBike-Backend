@@ -3,7 +3,7 @@ const record = require("../model/record");
 const recordController = {
     viewToday: async (req, res) => {
         try {
-            const {id, date} = req.body;
+            const {id} = req.body;
             const result = await post.viewToday();
             res.json(result);
         } catch (err) {
@@ -43,7 +43,7 @@ const recordController = {
 
     record: async (req, res) => {
         try {
-            const {id, date, dailyTime} = req.body;
+            const {id, dailyTime} = req.body;
             const result = await post.record();
             res.json(result);
         } catch (err) {

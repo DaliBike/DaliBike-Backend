@@ -46,7 +46,16 @@ const user = {
         } catch (error) {
             console.log("user: nickname 중복 조회 오류 발생");
         }
+    },
+    mainPage: async function(id) {
+        try {
+            const [result] = await mysql.query("SELECT u.Nickname, r.dailyTime FROM USER u LEFT JOIN record r ON u.USERId = r.USERId AND r.DATE = CURDATE() WHERE u.USERId = ?", [id]);
+            return result;
+        } catch (error) {
+            console.log("user: mainPage 조회 오류 발생", error);
+        }
     }
+    
 }
 
 module.exports = user;

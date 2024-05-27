@@ -2,10 +2,11 @@
 
 const mysql = require('./config.js');
 
+
 const record = {
-    viewToday : async function(id, date) {
+    viewToday: async function(id) {
         try {
-            const [result] = await mysql.query("SELECT * FROM record WHERE id = ? AND date = ?", [id, date]);
+            const [result] = await mysql.query("SELECT * FROM record WHERE id = ? AND date = CURDATE()", [id]);
             return result;
         } catch (error) {
             console.log("record: 오늘 기록 조회 오류 발생");
@@ -44,20 +45,19 @@ const record = {
         }
     },
 
-    record : async function(id, date, dailyTime) {
+record: async function(id, dailyTime) {
         try {
-            if (await this.viewToday(id, date).length === 0) {
-                await mysql.query("INSERT INTO record (USERId, date, dailyTime) VALUES (?, ?, ?)", [id, date, dailyTime]);
+            const todayRecord = await this.viewToday(id);
+            if (todayRecord.length === 0) {
+                await mysql.query("INSERT INTO record (USERId, date, dailyTime) VALUES (?, CURDATE(), ?)", [id, dailyTime]);
             } else {
-                const existDailyTime = await this.viewToday(id, date)[0].dailyTime;
-                await mysql.query("UPDATE record SET dailyTime = ? WHERE USERId = ? AND date = ?", [existDailyTime + dailyTime, id, date]);
+                const existDailyTime = todayRecord[0].dailyTime;
+                await mysql.query("UPDATE record SET dailyTime = ? WHERE USERId = ? AND date = CURDATE()", [existDailyTime + dailyTime, id]);
             }
-
         } catch (error) {
             console.log("record: 기록 오류 발생");
         }
     }
-
 }
 
 module.exports = record;

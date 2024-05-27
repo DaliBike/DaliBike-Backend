@@ -1,6 +1,5 @@
 "use strict";
 
-const {WriteComment} = require('../controller/post.js');
 const mysql = require('./config.js');
 
 const post = {
