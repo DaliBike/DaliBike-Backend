@@ -1,12 +1,11 @@
-// const express = require('express');
-// const router = express.Router();
-// const recordController = require("../controller/record");
+const express = require('express');
+const router = express.Router();
+const recordController = require("../controller/record");
 
-// router.get("/:id", recordController.viewToday);
-// router.get("/today/:id", recordController.viewToday);
-// router.get("/month/:id/:month", recordController.viewMonth);
-// router.get("/rank/:month", recordController.viewRank);
-// router.get("/rank/:id/:month", recordController.viewMyRank);
+router.post("/my/today", recordController.viewToday);
+router.post("my/monthly", recordController.viewMonth);
+router.post("rank", recordController.viewRank);
+router.post("my/rank", recordController.viewMyRank);
+router.post("record", recordController.record);
 
-
-// module.exports = router;
+module.exports = router;

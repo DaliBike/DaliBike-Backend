@@ -1,4 +1,3 @@
-const {commit} = require("../model/config");
 const post = require("../model/post");
 const comment = require("../model/comment");
 
