@@ -12,7 +12,7 @@ const postController = {
     },
 
     ViewCategoryPost: async (req, res) => {
-        const category = req.params.category;
+        const category = req.body;
         try {
             const result = await post.viewCategoryPost(category);
             res.json(result);
@@ -32,7 +32,7 @@ const postController = {
     },
 
     SelectPost: async (req, res) => {
-        const postId = req.params.postId;
+        const postId = req.body;
         try {
             const result = await post.selectPost(postId);
             const result2 = await comment.getComment(postId);
@@ -62,7 +62,7 @@ const postController = {
     },
 
     DeletePost: async (req, res) => {
-        const {postId} = req.params.postId;
+        const {postId} = req.body;
         try {
             const result = await post.deletePost(postId);
             res.json(result);
@@ -72,7 +72,7 @@ const postController = {
     },
 
     LikePost: async (req, res) => {
-        const {postId} = req.params.id;
+        const {postId} = req.body;
         try {
             const result = await post.likePost(postId);
             res.json(result);

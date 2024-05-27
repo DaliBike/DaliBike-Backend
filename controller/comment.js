@@ -13,7 +13,7 @@ const commentController = {
 
     //댓글 삭제
     DeleteComment: async (req, res) => {
-        const postId = req.params.id;
+        const postId = req.body;
         try {
             const result = await comment.deleteComment(id);
             res.json(result);
@@ -23,7 +23,7 @@ const commentController = {
     },
 
     GetComment: async (req, res) => {
-        const postId = req.params.postId;
+        const postId = req.body;
         try {
             const result = await comment.getComment(postId);
             res.json(result);
