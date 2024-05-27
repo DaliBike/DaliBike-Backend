@@ -20,7 +20,7 @@ const post = {
     viewCategoryPost: async function (category) {
         try {
             const [result] = await mysql.query(
-                "SELECT p.PostId, p.Title, p.Content, p.Like, p.Category, u.Nickname FROM Post p JOIN USER u ON p.USERId = u.USERId WHERE Category =?",
+                "SELECT p.Title, p.Content, p.Like, u.Nickname FROM Post p JOIN USER u ON p.USERId = u.USERId WHERE Category =?",
                 [category]
             );
             return result;
