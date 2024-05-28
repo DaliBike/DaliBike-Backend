@@ -29,7 +29,7 @@ const mapController = {
     },
     getStoreDetails : async (req, res) => {
         try {
-            const id = req.body;
+            const id = req.params.id;
             const result = await map.getStoreDetails(id);
             res.json(result);
         } catch (error) {
@@ -46,7 +46,7 @@ const mapController = {
     },
     getReportDetails : async (req, res) => {
         try {
-            const id = req.body;
+            const id = req.params.id;
             const result = await report.getReportDetails(id);
             res.json(result);
         } catch (error) {
@@ -64,7 +64,7 @@ const mapController = {
     },
     getRentalStationDetails : async (req, res) => {
         try {
-            const id = req.body;
+            const id = req.params.id;
             const result = await map.getRentalStationDetails(id);
             res.json(result);
         } catch (error) {
@@ -82,7 +82,7 @@ const mapController = {
     },
     getLodgingDetails : async (req, res) => {
         try {
-            const id = req.body;
+            const id = req.params.id;
             const result = await map.getLodgingDetails(id);
             res.json(result);
         } catch (error) {
