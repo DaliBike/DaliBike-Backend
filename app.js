@@ -6,13 +6,13 @@ const port = 3000
 app.use(express.json());
 
 const userRouter = require("./routers/user");
-//const recordRouter = require("./routers/record");
+const recordRouter = require("./routers/record");
 const mapRouter = require("./routers/map")
 const postRouter = require("./routers/post");
 const reportRouter = require("./routers/report");
 
 app.use("/user", userRouter);
-//app.use("/record", recordRouter);
+app.use("/record", recordRouter);
 app.use("/map", mapRouter);
 app.use("/post", postRouter);
 app.use("/report", reportRouter);

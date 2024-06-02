@@ -49,10 +49,10 @@ record: async function(id, dailyTime) {
         try {
             const todayRecord = await this.viewToday(id);
             if (todayRecord.length === 0) {
-                await mysql.query("INSERT INTO record (USERId, date, dailyTime) VALUES (?, CURDATE(), ?)", [id, dailyTime]);
+                await mysql.query("INSERT INTO record (USERId, date, dailyTime) VALUES (?, DATE_SUB(NOW(), INTERVAL ? SECOND), ?)", [id, dailyTime, dailyTime]);
             } else {
                 const existDailyTime = todayRecord[0].dailyTime;
-                await mysql.query("UPDATE record SET dailyTime = ? WHERE USERId = ? AND date = CURDATE()", [existDailyTime + dailyTime, id]);
+                await mysql.query("UPDATE record SET dailyTime = ? WHERE USERId = ? AND date = DATE_SUB(NOW(), INTERVAL ? SECOND)", [existDailyTime + dailyTime, dailyTime, id]);
             }
         } catch (error) {
             console.log("record: 기록 오류 발생");
