@@ -41,12 +41,11 @@ const report = {
             return false;
         }
     },
-    deleteImage : async function(image) {
+    deleteImage : async function(imagePath) {
         try {
-            const filePath = image;
-            const isExistFile = fs.stat(filePath);
+            const isExistFile = fs.stat(imagePath);
             if (isExistFile) {
-                fs.unlink(filePath);
+                fs.unlink(imagePath);
             }
             console.log("report: deleteImage 완료")
             return true;
