@@ -1,6 +1,5 @@
 "use strict";
 
-const { uploadImage } = require('../controller/report.js');
 const mysql = require('./config.js');
 const multer = require('multer');
 const fs = require('fs');
@@ -24,7 +23,7 @@ const report = {
     },
     getNearbyReportListOfUser : async function(userId, latitude, longitude) {
         try {
-            const [result] = await mysql.query("SELECT * FROM report WHERE userId = ? AND (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude))) < 0.015", [userId, latitude, longitude, latitude]);
+            const [result] = await mysql.query("SELECT * FROM report WHERE userId = ? AND (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) < 0.015", [userId, latitude, longitude, latitude]);
             return result.length == 0;
         } catch (error) {
             console.log("report: getNearbyReportListOfUser 오류 발생");

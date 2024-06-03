@@ -4,6 +4,7 @@ const reportController = {
     addReport : async function(req, res) {
         try {
             const {userId, type, latitude, longitude} = req.body;
+            console.log(req.file)
             const isAvailable = await report.getNearbyReportListOfUser(userId, latitude, longitude);
             if (isAvailable) {
                 const image = req.file.path;
@@ -21,6 +22,7 @@ const reportController = {
             }
         } catch (error) {
             console.log("report: addReport 오류 발생");
+            console.log(error);
             await report.deleteImage(req.file.path)
             res.status(500).json({ "result": "error" })
         }
