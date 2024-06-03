@@ -28,7 +28,7 @@ const record = {
     viewRank : async function(year, month) {
         try {
             const [result] = await mysql.query(
-                "SELECT USERId, SUM(dailyTime) AS totalTime FROM record WHERE date BETWEEN ? AND ? GROUP BY USERId ORDER BY totalTime DESC",
+                "SELECT USERId, SUM(dailyTime) AS totalTime FROM record WHERE date BETWEEN ? AND ? GROUP BY USERId ORDER BY totalTime DESC LIMIT 3",
                 [`${year}-${month}-01`, `${year}-${month}-31`]
             );
             return result;
