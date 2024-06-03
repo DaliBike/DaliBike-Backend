@@ -81,6 +81,15 @@ const post = {
         } catch (err) {
             console.log("post: 게시글 좋아요 오류 발생");
         }
+    },
+
+    viewPost: async function (postId) {
+        try{
+            const [result] = await mysql.query("SELECT * FROM `Post` ORDER BY `Like` DESC LIMIT 6;", [postId]);
+            return result;
+        } catch (err) {
+            console.log("post: 인기 게시글 조회 오류 발생");
+        }
     }
 
 

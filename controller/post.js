@@ -79,7 +79,16 @@ const postController = {
         } catch (err) {
             console.log("post: 게시글 좋아요 컨트롤러 오류");
         }
-    }
+    },
+    
+    ViewHotPost: async (req, res) => {
+        try {
+            const result = await post.viewHotPost();
+            res.json(result);
+        } catch (err) {
+            console.log("post: 인기 게시글 조회 컨트롤러 오류");
+        }
+    },
 
 }
 
