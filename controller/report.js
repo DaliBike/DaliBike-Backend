@@ -11,8 +11,10 @@ const reportController = {
                 if (image === undefined) {
                     res.status(400).json({ "result": "no images" });
                 }
-                await report.addReport(userId, type, latitude, longitude, image)
-                res.status(200).json({ "result": "success" });
+                else {
+                    await report.addReport(userId, type, latitude, longitude, image)
+                    res.status(200).json({ "result": "success" });
+                }
             }
             else {
                 res.status(400).json({ "result": "can't report twice" });
