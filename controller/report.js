@@ -21,8 +21,7 @@ const reportController = {
                 res.status(400).json({ "result": "can't report twice" });
             }
         } catch (error) {
-            console.log("report: addReport 오류 발생");
-            console.log(error);
+            console.log("report: addReport controller 오류 발생" + error);
             await report.deleteImage(req.file.path)
             res.status(500).json({ "result": "error" })
         }

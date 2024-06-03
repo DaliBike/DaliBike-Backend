@@ -33,11 +33,11 @@ const report = {
     addReport : async function(userId, type, latitude, longitude, imagePath) {
         try {
             await mysql.query("INSERT INTO report (USERId, type, latitude, longitude, image) VALUES (?, ?, ?, ?, ?)", [userId, type, latitude, longitude, imagePath]);
-            console.log("report: addReport 완료")
+            console.log("report: addReport 완료!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
             return true;
         } catch (error) {
-            console.log("report: addReport 오류 발생")
-            return false;
+            console.log("report: addReport 오류 발생 " + error)
+            throw error;
         }
     },
     deleteImage : async function(imagePath) {
