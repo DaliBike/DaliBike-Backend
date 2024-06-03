@@ -53,6 +53,15 @@ const report = {
             throw error;
         }
     },
+    getManagerReportList : async function() {
+        try {
+            const [result] = await mysql.query("SELECT * FROM report WHERE DispStatus = 0");
+            return result;
+        } catch (error) {
+            console.log("report: getManagerReportList 오류 발생")
+            throw error;
+        }
+    }
 }
 
 module.exports = report;
