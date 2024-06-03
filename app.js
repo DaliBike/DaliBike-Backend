@@ -17,12 +17,18 @@ app.use("/map", mapRouter);
 app.use("/post", postRouter);
 app.use("/report", reportRouter);
 
-app.get("*", (req, res) => {
-  res.send("404 Not Found");
-});
+
 
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
+
+app.get("/manager", (req, res) => {
+  res.render("manager");
+});
+
+app.get("*", (req, res) => {
+  res.send("404 Not Found");
+});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
