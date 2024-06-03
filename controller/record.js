@@ -13,8 +13,8 @@ const recordController = {
 
     viewMonthly: async (req, res) => {
         try {
-            const {id, month} = req.body;
-            const result = await record.viewMonthly(id, month);
+            const {id, year, month} = req.body;
+            const result = await record.viewMonthly(id, year, month);
             res.json(result);
         } catch (err) {
             console.log("record: 월별 기록 조회 컨트롤러 오류")
@@ -23,8 +23,8 @@ const recordController = {
 
     viewRank: async (req, res) => {
         try {
-            const {month} = req.body;
-            const result = await record.viewMonthly(month);
+            const {year, month} = req.body;
+            const result = await record.viewRank(year, month);
             res.json(result);
         } catch (err) {
             console.log("record: 월별 기록 조회 컨트롤러 오류")
@@ -33,8 +33,8 @@ const recordController = {
 
     viewMyRank: async (req, res) => {
         try {
-            const {id, month} = req.body;
-            const result = await record.viewMyRank(id, month);
+            const {id, year, month} = req.body;
+            const result = await record.viewMyRank(id, year, month);
             res.json(result);
         } catch (err) {
             console.log("record: 내 랭킹 조회 컨트롤러 오류")
@@ -45,9 +45,10 @@ const recordController = {
         try {
             const {id, dailyTime} = req.body;
             const result = await record.record(id, dailyTime);
-            res.json(result);
+            res.json({result: 'true'});
         } catch (err) {
             console.log("record: 기록 컨트롤러 오류")
+            res.json({result: 'false'});
         }
     }
 }
