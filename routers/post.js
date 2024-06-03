@@ -14,6 +14,4 @@ router.post("/upload", postController.InsertPost)   // 게시글 등록
 router.delete("/delete/:postId", postController.DeletePost) // 게시글 삭제
 router.post("/like", postController.LikePost) // 게시글 좋아요
 
-router.get("/view/hotPosts", postController.viewHotPosts) // 인기 게시판 보기
-
 module.exports = router;
