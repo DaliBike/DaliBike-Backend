@@ -24,6 +24,10 @@ app.get("*", (req, res) => {
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 
+app.get("/manager", (req, res) => {
+  res.render("manager");
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })

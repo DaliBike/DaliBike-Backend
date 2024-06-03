@@ -3,7 +3,7 @@
     <form name="login">
       <fieldset>
         <legend>ID</legend>
-        <input type="text" name="userid" />
+        <input type="text" name="managerid" />
       </fieldset>
       <fieldset>
         <legend>Password</legend>
@@ -18,13 +18,13 @@
       function clickLogin() {
         const form = document.forms["login"];
         const data = {
-          userid: form.userid.value,
+          managerId: form.managerId.value,
           password: form.password.value
         }
 
         axios({
           method: "POST",
-          url: "/user/login2",
+          url: "/manager/login",
           data: data
         }).then((res) => {
           const {isSuccess, msg} = res.data
