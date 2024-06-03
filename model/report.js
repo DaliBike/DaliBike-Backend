@@ -31,9 +31,9 @@ const report = {
             throw error;
         }
     },
-    addReport : async function(userId, type, latitude, longitude, image) {
+    addReport : async function(userId, type, latitude, longitude, imagePath) {
         try {
-            await mysql.query("INSERT INTO report (USERId, type, latitude, longitude, image) VALUES (?, ?, ?, ?, ?)", [userId, type, latitude, longitude, image]);
+            await mysql.query("INSERT INTO report (USERId, type, latitude, longitude, image) VALUES (?, ?, ?, ?, ?)", [userId, type, latitude, longitude, imagePath]);
             console.log("report: addReport 완료")
             return true;
         } catch (error) {
