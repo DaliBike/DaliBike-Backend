@@ -10,7 +10,7 @@ const post = {
             const [result] = await mysql.query("SELECT p.Title, p.Content, p.Like, p.Category, u.Nickname, COUNT(c.CommentId) AS CommentCount FROM Post p JOIN USER u ON p.USERId = u.USERId LEFT JOIN Comment c ON p.PostId = c.PostId GROUP BY p.PostId, p.Title, p.Content, p.Like, p.Category, u.Nickname;");
             return result;
         } catch (err) {
-            console.log("post: 전체 조회 오류 발생");
+            console.log("post: 전체 조회 모델 오류 발생");
         }
     },
 
@@ -24,7 +24,7 @@ const post = {
             );
             return result;
         } catch (err) {
-            console.log("post: 카테고리별 조회 오류 발생");
+            console.log("post: 카테고리별 조회 모델 오류 발생");
         }
     },
 
@@ -59,7 +59,7 @@ const post = {
             );
             return result;
         } catch (err) {
-            console.log("post: 게시글 작성 오류 발생");
+            console.log("post: 게시글 작성 모델 오류 발생");
         }
     },
 
@@ -69,7 +69,7 @@ const post = {
             const [result] = await mysql.query("DELETE FROM Post WHERE PostId =?", [postId]);
             return result;
         } catch (err) {
-            console.log("post: 게시글 삭제 오류 발생");
+            console.log("post: 게시글 삭제 모델 오류 발생");
         }
     },
 
@@ -79,16 +79,17 @@ const post = {
             const [result] = await mysql.query("SELECT * FROM Post WHERE PostId =?", [postId]);
             return result;
         } catch (err) {
-            console.log("post: 게시글 좋아요 오류 발생");
+            console.log("post: 게시글 좋아요 모델 오류 발생");
         }
     },
-
+    
+    //인기 게시물
     viewHotPosts: async function () {
         try{
             const [result] = await mysql.query("SELECT * FROM Post ORDER BY Like DESC LIMIT 6;");
             return result;
         } catch (err) {
-            console.log("post: 인기 게시글 조회 오류 발생");
+            console.log("post: 인기 게시글 조회 모델 오류 발생");
         }
     }
 

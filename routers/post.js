@@ -8,6 +8,7 @@ router.get("/view/my/:userId", postController.ViewMyPost)  // 내 게시글 조�
 router.get("/view/hot", postController.ViewHotPosts) // 인기 게시판 보기
 router.get("/view/:postId", postController.SelectPost) // 게시글 선택 조회
 
+router.get("/view/hot", postController.ViewHotPosts) // 인기 게시판 보기
 
 
 router.post("/upload", postController.InsertPost)   // 게시글 등록
