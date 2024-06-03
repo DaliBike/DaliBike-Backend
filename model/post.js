@@ -83,10 +83,10 @@ const post = {
         }
     },
     
-    //인기 게시물
+    //인기 게시물 조회
     viewHotPosts: async function () {
-        try{
-            const [result] = await mysql.query("SELECT * FROM Post ORDER BY Like DESC LIMIT 6;");
+        try {
+            const [result] = await mysql.query("SELECT * FROM Post ORDER BY Like DESC LIMIT 1;");
             return result;
         } catch (err) {
             console.log("post: 인기 게시글 조회 모델 오류 발생");
