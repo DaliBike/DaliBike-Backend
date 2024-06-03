@@ -34,6 +34,7 @@ const reportController = {
             console.log("report: getManagerReportList controller 오류 발생" + error);
             res.status(500).json({ "result": "error" });
         }
+    },
 }
 
 module.exports = reportController;
