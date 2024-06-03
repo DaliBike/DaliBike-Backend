@@ -83,15 +83,14 @@ const post = {
         }
     },
 
-    viewPost: async function (postId) {
+    viewHotPosts: async function () {
         try{
-            const [result] = await mysql.query("SELECT * FROM `Post` ORDER BY `Like` DESC LIMIT 6;", [postId]);
+            const [result] = await mysql.query("SELECT * FROM Post ORDER BY Like DESC LIMIT 6;");
             return result;
         } catch (err) {
             console.log("post: 인기 게시글 조회 오류 발생");
         }
     }
-
 
 }
 

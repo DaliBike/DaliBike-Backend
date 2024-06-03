@@ -81,14 +81,15 @@ const postController = {
         }
     },
     
-    ViewHotPost: async (req, res) => {
+    ViewHotPosts: async (req, res) => {
         try {
-            const result = await post.viewHotPost();
+            const result = await post.viewHotPosts();
             res.json(result);
         } catch (err) {
             console.log("post: 인기 게시글 조회 컨트롤러 오류");
         }
-    },
+    }
+    
 
 }
 
