@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manager Report List</title>
     <style>
+        @font-face {
+            font-family: 'KBO-Dia-Gothic_medium';
+            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-2@1.0/KBO-Dia-Gothic_medium.woff') format('woff');
+            font-weight: 500;
+            font-style: normal;
+        }
+        * {
+            font-family: 'KBO-Dia-Gothic_medium', sans-serif;
+        }
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
@@ -18,6 +27,20 @@
         h1 {
             text-align: center;
             color: #333;
+        }
+
+        .pendingList {
+            background-color: #8d9f5a;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 2px;
+        }
+
+        .selected {
+            background-color: #5d683f;
         }
 
         .container {
@@ -119,7 +142,11 @@
 <body>
     <div class="container">
         <h1>Manager Report List</h1>
-        <table>
+        <div style="text-align: center;">
+            <button class="pendingList selected" onclick="toggleList('reportList', this)">등록 대기 목록</button>
+            <button class="pendingList" onclick="toggleList('deleteReportList', this)">삭제 대기 목록</button>
+        </div>
+        <table id="reportTable">
             <thead>
                 <tr>
                     <th>Report ID</th>
@@ -131,28 +158,63 @@
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody>
-                <% reportList.forEach(report => { %>
+            <tbody id="reportList">
+                <% if (reportList.length === 0) { %>
                     <tr>
-                        <td data-th="Report ID"><%= report.reportId %></td>
-                        <td data-th="User ID"><%= report.USERId %></td>
-                        <td data-th="Type"><%= report.type === 0 ? '포트홀' : '공사현장' %></td>
-                        <td class="hide-on-small-screen" data-th="Latitude"><%= report.Latitude %></td>
-                        <td class="hide-on-small-screen" data-th="Longitude"><%= report.Longitude %></td>
-                        <td data-th="Image">
-                            <button class="action-button" onclick="toggleImage(this, '<%= report.image %>')">사진 보기</button>
-                        </td>
-                        <td data-th="Actions">
-                            <button class="action-button approve-button" onclick="handleAction(<%= report.reportId %>, 'approve')">승인</button>
-                            <button class="action-button reject-button" onclick="handleAction(<%= report.reportId %>, 'reject')">거절</button>
-                        </td>
+                        <td colspan="7">데이터 없음</td>
                     </tr>
-                    <tr class="image-row" style="display: none;">
-                        <td colspan="7">
-                            <img src="..\<%= report.image %>" alt="Report Image" class="large-image">
-                        </td>
+                <% } else { %>
+                    <% reportList.forEach(report => { %>
+                        <tr>
+                            <td data-th="Report ID"><%= report.reportId %></td>
+                            <td data-th="User ID"><%= report.USERId %></td>
+                            <td data-th="Type"><%= report.type === 0 ? '포트홀' : '공사현장' %></td>
+                            <td class="hide-on-small-screen" data-th="Latitude"><%= report.Latitude %></td>
+                            <td class="hide-on-small-screen" data-th="Longitude"><%= report.Longitude %></td>
+                            <td data-th="Image">
+                                <button class="action-button" onclick="toggleImage(this, '<%= report.image %>')">사진 보기</button>
+                            </td>
+                            <td data-th="Actions">
+                                <button class="action-button approve-button" onclick="handleAction(<%= report.reportId %>, 'approve')">승인</button>
+                                <button class="action-button reject-button" onclick="handleAction(<%= report.reportId %>, 'reject')">거절</button>
+                            </td>
+                        </tr>
+                        <tr class="image-row" style="display: none;">
+                            <td colspan="7">
+                                <img src="..\<%= report.image %>" alt="Report Image" class="large-image">
+                            </td>
+                        </tr>
+                    <% }); %>
+                <% } %>
+            </tbody>
+            <tbody id="deleteReportList" style="display: none;">
+                <% if (deleteReportList.length === 0) { %>
+                    <tr>
+                        <td colspan="7">데이터 없음</td>
                     </tr>
-                <% }); %>
+                <% } else { %>
+                    <% deleteReportList.forEach(report => { %>
+                        <tr>
+                            <td data-th="Report ID"><%= report.reportId %></td>
+                            <td data-th="User ID"><%= report.USERId %></td>
+                            <td data-th="Type"><%= report.type === 0 ? '포트홀' : '공사현장' %></td>
+                            <td class="hide-on-small-screen" data-th="Latitude"><%= report.Latitude %></td>
+                            <td class="hide-on-small-screen" data-th="Longitude"><%= report.Longitude %></td>
+                            <td data-th="Image">
+                                <button class="action-button" onclick="toggleImage(this, '<%= report.image %>')">사진 보기</button>
+                            </td>
+                            <td data-th="Actions">
+                                <button class="action-button approve-button" onclick="handleAction(<%= report.reportId %>, 'approve')">승인</button>
+                                <button class="action-button reject-button" onclick="handleAction(<%= report.reportId %>, 'reject')">거절</button>
+                            </td>
+                        </tr>
+                        <tr class="image-row" style="display: none;">
+                            <td colspan="7">
+                                <img src="..\<%= report.image %>" alt="Report Image" class="large-image">
+                            </td>
+                        </tr>
+                    <% }); %>
+                <% } %>
             </tbody>
         </table>
     </div>
@@ -168,6 +230,23 @@
             } else {
                 imageRow.style.display = 'none';
                 button.textContent = '사진 보기';
+            }
+        }
+
+        function toggleList(listId, button) {
+            const reportList = document.getElementById('reportList');
+            const deleteReportList = document.getElementById('deleteReportList');
+            const buttons = document.querySelectorAll('.pendingList');
+
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            button.classList.add('selected');
+
+            if (listId === 'reportList') {
+                reportList.style.display = 'table-row-group';
+                deleteReportList.style.display = 'none';
+            } else {
+                reportList.style.display = 'none';
+                deleteReportList.style.display = 'table-row-group';
             }
         }
 

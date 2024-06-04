@@ -62,7 +62,16 @@ const report = {
             console.log("report: getManagerReportList 오류 발생")
             throw error;
         }
-    }
+    },
+    getManagerDeleteReportList : async function() {
+        try {
+            const [result] = await mysql.execute("SELECT * FROM reportRemovalRequest");
+            return result;
+        } catch (error) {
+            console.log("report: getManagerDeleteReportList 오류 발생")
+            throw error;
+        }
+    },
 }
 
 module.exports = report;

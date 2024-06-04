@@ -34,7 +34,8 @@ const reportController = {
     getManagerReportList : async function(req, res) {
         try {
             const reportList = await report.getManagerReportList();
-            res.render("managerReportList", { reportList });
+            const deleteReportList = await report.getManagerDeleteReportList();
+            res.render("managerReportList", { reportList, deleteReportList });
         } catch (error) {
             console.log("report: getManagerReportList controller 오류 발생" + error);
             res.status(500).json({ "result": "error" });
