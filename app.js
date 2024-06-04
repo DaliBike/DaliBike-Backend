@@ -12,6 +12,7 @@ const postRouter = require("./routers/post");
 const reportRouter = require("./routers/report");
 const managerRouter = require("./routers/manager");
 
+app.use(express.static('/'));
 app.use("/user", userRouter);
 app.use("/record", recordRouter);
 app.use("/map", mapRouter);

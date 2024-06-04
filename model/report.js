@@ -2,7 +2,7 @@
 
 const mysql = require('./config.js');
 const multer = require('multer');
-const fs = require('fs');
+const fs = require('fs').promises;
 
 const report = {
     getReportList : async function() {
@@ -40,19 +40,20 @@ const report = {
             throw error;
         }
     },
-    deleteImage : async function(imagePath) {
+    deleteImage: async function(imagePath) {
         try {
-            const isExistFile = fs.stat(imagePath);
-            if (isExistFile) {
-                fs.unlink(imagePath);
-            }
-            console.log("report: deleteImage 완료")
+            // 파일이 존재하는지 확인
+            await fs.access(imagePath);
+            // 파일이 존재할 경우 삭제
+            await fs.unlink(imagePath);
+            console.log("report: deleteImage 완료");
             return true;
         } catch (error) {
-            console.log("report: deleteImage 오류 발생")
+            console.log("report: deleteImage 오류 발생", error);
             throw error;
         }
     },
+    
     getManagerReportList : async function() {
         try {
             const [result] = await mysql.query("SELECT * FROM report WHERE DispStatus = 0");

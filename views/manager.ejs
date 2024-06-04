@@ -1,39 +1,57 @@
 <body>
-    <h2>관리자 로그인</h2>
-    <form name="login">
-      <fieldset>
-        <legend>ID</legend>
-        <input type="text" name="managerid" />
-      </fieldset>
-      <fieldset>
-        <legend>Password</legend>
-        <input type="password" name="password" />
-      </fieldset>
+  <h2>관리자 로그인</h2>
+  <form name="login">
+    <fieldset>
+      <legend>ID</legend>
+      <input type="text" name="managerid" />
+    </fieldset>
+    <fieldset>
+      <legend>Password</legend>
+      <input type="password" name="password" />
+    </fieldset>
 
-      <button type="button" onclick="clickLogin()">로그인</button>
-    </form>
-    <div class="login-result"></div>
+    <button type="button" onclick="clickLogin()">로그인</button>
+  </form>
+  <div class="login-result"></div>
 
-    <script>
-      function clickLogin() {
-        const form = document.forms["login"];
-        const data = {
-          managerId: form.managerId.value,
-          password: form.password.value
+  <script>
+    async function clickLogin() {
+      const form = document.forms["login"];
+      const data = {
+        id: form.managerid.value,
+        pw: form.password.value
+      }
+
+      try {
+        const response = await fetch("/manager/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
         }
 
-        axios({
-          method: "POST",
-          url: "/manager/login",
-          data: data
-        }).then((res) => {
-          const {isSuccess, msg} = res.data
+        const resData = await response.json();
+        const result = resData[0].result;
 
+        // 로그인 성공 시 페이지 이동
+        console.log(result);
+        if (result === "true") {
+          //POST 방식으로 로그인 성공 시 페이지 이동
+          window.location.href = "/manager/report/list";
+        } else {
+          // 로그인 실패 시 메시지 표시
           const element = document.querySelector(".login-result");
-          element.innerHTML = msg;
-
-          const color = isSuccess ? "blue" : "red";
-          element.style.color = color
-        })
+          element.innerHTML = "로그인 실패";
+          element.style.color = "red";
+        }
+      } catch (error) {
+        console.error("Error:", error);
       }
-    </script>
+    }
+  </script>
+</body>

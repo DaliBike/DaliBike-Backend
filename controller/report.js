@@ -13,23 +13,27 @@ const reportController = {
                     res.status(400).json({ "result": "no images" });
                 }
                 else {
+                    imagePath = path.join(__dirname, '..', image);
                     await report.addReport(userId, type, latitude, longitude, image)
                     res.status(200).json({ "result": "success" });
                 }
             }
             else {
                 res.status(400).json({ "result": "can't report twice" });
+                throw new Error("한 유저가 같은 위치의 요소를 두 번 이상 신고할 수 없습니다.");
             }
         } catch (error) {
             console.log("report: addReport controller 오류 발생" + error);
             await report.deleteImage(req.file.path)
-            res.status(500).json({ "result": "error" })
+            if (error.message !== "한 유저가 같은 위치의 요소를 두 번 이상 신고할 수 없습니다.") {            
+                res.status(500).json({ "result": "error" })
+            }
         }
     },
     getManagerReportList : async function(req, res) {
         try {
             const reportList = await report.getManagerReportList();
-            res.status(200).json(reportList);
+            res.render("managerReportList", { reportList });
         } catch (error) {
             console.log("report: getManagerReportList controller 오류 발생" + error);
             res.status(500).json({ "result": "error" });

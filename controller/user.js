@@ -12,6 +12,16 @@ const userController = {
             res.json({ result: "error" });
         }
     },
+    managerLogin : async (req, res) => {
+        const {id, pw} = req.body;
+        try {
+            const result = await user.managerLogin(id, pw);
+            res.json(result);
+        } catch (error) {
+            console.log("user: managerLogin 컨트롤러 오류 발생");
+            res.json({ result: "error" });
+        }
+    },
     register : async (req, res) => {
         const {id, pw, phone, name, nickname} = req.body;
         try {
@@ -52,7 +62,7 @@ const userController = {
     mainPage : async (req, res) => {
         try {
             const {id} = req.body;
-            const result = await user.mainPage();
+            const result = await user.mainPage(id);
             res.json(result);
         } catch (error) {
             console.log("user: mainPage 컨트롤러 오류 발생");

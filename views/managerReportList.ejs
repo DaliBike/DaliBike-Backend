@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Report List</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .image-container {
+            position: relative;
+            display: inline-block;
+        }
+        .image-container img {
+            max-width: 100px;
+            height: auto;
+            cursor: pointer;
+            position: absolute;
+            top: calc(100% + 5px); /* 버튼의 아래에 위치하도록 조정 */
+            left: 0;
+            transform: translateX(-50%);
+            display: none; /* 기본적으로 숨겨둠 */
+        }
+        .image-container .toggle-btn {
+            position: relative; /* 자식 요소인 이미지가 부모 요소를 기준으로 위치하도록 함 */
+        }
+    </style>
+</head>
+<body>
+    <h1>Manager Report List</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Report ID</th>
+                <th>User ID</th>
+                <th>Type</th>
+                <th>Latitude</th>
+                <th>Longitude</th>
+                <th>Image</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% reportList.forEach(report => { %>
+                <tr>
+                    <td><%= report.reportId %></td>
+                    <td><%= report.USERId %></td>
+                    <td><%= report.type === 0 ? '포트홀' : '공사현장' %></td>
+                    <td><%= report.Latitude %></td>
+                    <td><%= report.Longitude %></td>
+                    <td>
+                        <div class="image-container">
+                            <button class="toggle-btn" onclick="toggleImage(this)">사진 보기</button>
+                            <img src="<%= report.image %>" alt="Report Image" class="large-image">
+                        </div>
+                    </td>
+                    <td>
+                        <button onclick="handleAction(<%= report.reportId %>, 'approve')">승인</button>
+                        <button onclick="handleAction(<%= report.reportId %>, 'reject')">거절</button>
+                    </td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+
+    <script>
+        function toggleImage(button) {
+            const image = button.parentElement.querySelector('.large-image');
+            if (image) {
+                if (image.style.display === 'none') {
+                    image.style.display = 'inline';
+                    button.textContent = '사진 숨기기';
+                } else {
+                    image.style.display = 'none';
+                    button.textContent = '사진 보기';
+                }
+            } else {
+                console.error('Image not found.');
+            }
+        }
+
+        async function handleAction(reportId, action) {
+            try {
+                const response = await fetch(`/report/${action}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ reportId })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert(`${action === 'approve' ? '승인' : '거절'} 성공`);
+                    location.reload();
+                } else {
+                    alert(`${action === 'approve' ? '승인' : '거절'} 실패`);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+    </script>
+</body>
+</html>

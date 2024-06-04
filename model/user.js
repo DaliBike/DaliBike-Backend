@@ -12,6 +12,15 @@ const user = {
             console.log("user: login 조회 오류 발생");
         }
     },
+    managerLogin : async function(id, pw) {
+        try {   // TRUE : 로그인 성공, FALSE : 로그인 실패
+            const [result] = await mysql.query("SELECT IF(COUNT(*) = 0, 'false', 'true') AS result FROM MANAGER WHERE MANAGERId = ? AND password = ?", [id, pw]);
+            console.log("매니저 로그인 조회 성공 : " + result)
+            return result;
+        } catch (error) {
+            console.log("user: managerLogin 조회 오류 발생");
+        }
+    },
     register : async function(id, pw, phone, name, nickname) {
         try {
             await mysql.query("INSERT INTO USER (USERId, Password, PhoneNumber, Name, Nickname, Points, subDate)"
@@ -49,7 +58,12 @@ const user = {
     },
     mainPage: async function(id) {
         try {
-            const [result] = await mysql.query("SELECT u.Nickname, r.dailyTime FROM USER u LEFT JOIN record r ON u.USERId = r.USERId AND r.DATE = CURDATE() WHERE u.USERId = ?", [id]);
+            const [result] = await mysql.execute(`
+            SELECT u.Nickname, r.dailyTime
+            FROM USER u
+            LEFT JOIN record r ON u.USERId = r.USERId AND r.\`DATE\` = CURDATE()
+            WHERE u.USERId = ?
+          `, [id]);
             return result;
         } catch (error) {
             console.log("user: mainPage 조회 오류 발생", error);
