@@ -5,87 +5,169 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manager Report List</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 1000px;
+            overflow: auto; /* Allows scrolling */
+            max-height: 500px; /* Sets the maximum height of the container */
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 20px;
         }
+
         th, td {
             padding: 8px 12px;
             border: 1px solid #ddd;
             text-align: center;
         }
+
         th {
             background-color: #f4f4f4;
         }
-        .image-container {
-            position: relative;
-            display: inline-block;
+
+        button {
+            font-size: 16px;
         }
-        .image-container img {
-            max-width: 100px;
-            height: auto;
+
+        .action-button {
+            color: #fff;
+            background-color: #8d9f5a;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
             cursor: pointer;
-            position: absolute;
-            top: calc(100% + 5px); /* 버튼의 아래에 위치하도록 조정 */
-            left: 0;
-            transform: translateX(-50%);
-            display: none; /* 기본적으로 숨겨둠 */
+            margin: 2px;
         }
-        .image-container .toggle-btn {
-            position: relative; /* 자식 요소인 이미지가 부모 요소를 기준으로 위치하도록 함 */
+        
+        .action-button:hover {
+            background-color: #7f8c5a;
+        }
+
+        .approve-button {
+            background-color: #4CAF50; /* Green */
+        }
+
+        .approve-button:hover {
+            background-color: #45a049;
+        }
+
+        .reject-button {
+            background-color: #f44336; /* Red */
+        }
+
+        .reject-button:hover {
+            background-color: #e53935;
+        }
+
+        .large-image {
+            max-width: 60%;
+            height: auto;
+        }
+
+        @media screen and (max-width: 800px) {
+            table, th, td {
+                font-size: 0.8em; /* Adjusts the font size when the screen is 800px or less */
+            }
+        }
+
+        @media screen and (max-width: 500px) {
+            .hide-on-small-screen {
+                display: none; /* Hides the elements when the screen is 500px or less */
+            }
+
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+
+            td:before {
+                content: attr(data-th);
+                font-weight: bold;
+                display: inline-block;
+                width: 100%;
+                background-color: #f4f4f4;
+            }
+
+            .large-image {
+                max-width: 100%;
+                height: auto;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>Manager Report List</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Report ID</th>
-                <th>User ID</th>
-                <th>Type</th>
-                <th>Latitude</th>
-                <th>Longitude</th>
-                <th>Image</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% reportList.forEach(report => { %>
+    <div class="container">
+        <h1>Manager Report List</h1>
+        <table>
+            <thead>
                 <tr>
-                    <td><%= report.reportId %></td>
-                    <td><%= report.USERId %></td>
-                    <td><%= report.type === 0 ? '포트홀' : '공사현장' %></td>
-                    <td><%= report.Latitude %></td>
-                    <td><%= report.Longitude %></td>
-                    <td>
-                        <div class="image-container">
-                            <button class="toggle-btn" onclick="toggleImage(this)">사진 보기</button>
-                            <img src="<%= report.image %>" alt="Report Image" class="large-image">
-                        </div>
-                    </td>
-                    <td>
-                        <button onclick="handleAction(<%= report.reportId %>, 'approve')">승인</button>
-                        <button onclick="handleAction(<%= report.reportId %>, 'reject')">거절</button>
-                    </td>
+                    <th>Report ID</th>
+                    <th>User ID</th>
+                    <th>Type</th>
+                    <th class="hide-on-small-screen">Latitude</th>
+                    <th class="hide-on-small-screen">Longitude</th>
+                    <th>Image</th>
+                    <th>Actions</th>
                 </tr>
-            <% }); %>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <% reportList.forEach(report => { %>
+                    <tr>
+                        <td data-th="Report ID"><%= report.reportId %></td>
+                        <td data-th="User ID"><%= report.USERId %></td>
+                        <td data-th="Type"><%= report.type === 0 ? '포트홀' : '공사현장' %></td>
+                        <td class="hide-on-small-screen" data-th="Latitude"><%= report.Latitude %></td>
+                        <td class="hide-on-small-screen" data-th="Longitude"><%= report.Longitude %></td>
+                        <td data-th="Image">
+                            <button class="action-button" onclick="toggleImage(this, '<%= report.image %>')">사진 보기</button>
+                        </td>
+                        <td data-th="Actions">
+                            <button class="action-button approve-button" onclick="handleAction(<%= report.reportId %>, 'approve')">승인</button>
+                            <button class="action-button reject-button" onclick="handleAction(<%= report.reportId %>, 'reject')">거절</button>
+                        </td>
+                    </tr>
+                    <tr class="image-row" style="display: none;">
+                        <td colspan="7">
+                            <img src="..\<%= report.image %>" alt="Report Image" class="large-image">
+                        </td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </div>
 
     <script>
-        function toggleImage(button) {
-            const image = button.parentElement.querySelector('.large-image');
-            if (image) {
-                if (image.style.display === 'none') {
-                    image.style.display = 'inline';
-                    button.textContent = '사진 숨기기';
-                } else {
-                    image.style.display = 'none';
-                    button.textContent = '사진 보기';
-                }
+        function toggleImage(button, imagePath) {
+            const currentRow = button.closest('tr');
+            const imageRow = currentRow.nextElementSibling;
+
+            if (imageRow.style.display === 'none') {
+                imageRow.style.display = 'table-row';
+                button.textContent = '사진 숨기기';
             } else {
-                console.error('Image not found.');
+                imageRow.style.display = 'none';
+                button.textContent = '사진 보기';
             }
         }
 
@@ -100,13 +182,14 @@
                 });
                 const result = await response.json();
                 if (result.success) {
-                    alert(`${action === 'approve' ? '승인' : '거절'} 성공`);
+                    alert(`Report ${action}d successfully`);
                     location.reload();
                 } else {
-                    alert(`${action === 'approve' ? '승인' : '거절'} 실패`);
+                    alert(`Failed to ${action} report`);
                 }
             } catch (error) {
                 console.error('Error:', error);
+                alert('An error occurred while processing your request.');
             }
         }
     </script>

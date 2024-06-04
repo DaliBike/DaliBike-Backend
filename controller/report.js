@@ -1,4 +1,5 @@
 const report = require("../model/report");
+const path = require("path");
 
 const reportController = {
     addReport : async function(req, res) {
@@ -13,7 +14,7 @@ const reportController = {
                     res.status(400).json({ "result": "no images" });
                 }
                 else {
-                    imagePath = path.join(__dirname, '..', image);
+                    imagePath = path.join(__dirname, '..', 'public', 'reportImages');
                     await report.addReport(userId, type, latitude, longitude, image)
                     res.status(200).json({ "result": "success" });
                 }
@@ -39,6 +40,26 @@ const reportController = {
             res.status(500).json({ "result": "error" });
         }
     },
+    getReportImage : async function(req, res) {
+        try {
+            const imagePath = path.join(__dirname, '..', 'public', 'reportImages', req.params.image);
+            res.sendFile(imagePath);
+        } catch (error) {
+            console.log("report: getReportImage controller 오류 발생" + error);
+            res.status(500).json({ "result": "error" });
+        }
+    },
+    approve : async function(req, res) {
+        try {
+            reportId = req.body.reportId;
+            
+        } catch (error) {
+
+        }
+    },
+    reject : async function(req, res) {
+
+    }
 }
 
 module.exports = reportController;
