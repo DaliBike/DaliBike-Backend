@@ -9,7 +9,7 @@ router.get("/", (req, res) => {
 router.post("/login", userController.managerLogin);
 router.get("/report/list", reportController.getManagerReportList);
 router.get("/public/reportImages/:image", reportController.getReportImage);
-router.post("/report/approve", reportController.approve);
-router.post("/report/reject", reportController.reject);
+router.post("/report/approve", reportController.registerApprove);
+router.post("/report/reject", reportController.registerReject);
 
 module.exports = router;

@@ -50,17 +50,30 @@ const reportController = {
             res.status(500).json({ "result": "error" });
         }
     },
-    approve : async function(req, res) {
+    registerApprove : async function(req, res) {
         try {
-            reportId = req.body.reportId;
-            
+            const reportId = req.body.reportId;
+            const type = await report.getReportType(reportId);
+            const [nearbySameReports] = await report.getNearbySameReports(reportId, type);
+            const numberOfReports = nearbySameReports.length;
+            if (numberOfReports > 0) {
+                await report.registerApprove(reportId, type, 100 / numberOfReports);
+                for (restReport of nearbySameReports) {
+                    await report.registerNearbyApprove(restReport.reportId, type, 100 / numberOfReports)
+                }
+            }
         } catch (error) {
 
         }
     },
-    reject : async function(req, res) {
+    registerReject : async function(req, res) {
 
-    }
+    },
+    registerAutoApprove : async function(req, res) {
+        const autoApproveReportList = await report.getAutoApproveReportList();
+    },
+    registerAutoReject : async function(req, res) {
+    },
 }
 
 module.exports = reportController;

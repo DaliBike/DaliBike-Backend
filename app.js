@@ -21,7 +21,6 @@ app.use("/report", reportRouter);
 app.use("/manager", managerRouter);
 
 
-
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 

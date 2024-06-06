@@ -93,7 +93,7 @@
         }
 
         .approve-button:hover {
-            background-color: #45a049;
+            background-color: #3a853e;
         }
 
         .reject-button {
@@ -101,7 +101,7 @@
         }
 
         .reject-button:hover {
-            background-color: #e53935;
+            background-color: #ce3230;
         }
 
         .large-image {
@@ -150,6 +150,7 @@
             <thead>
                 <tr>
                     <th>Report ID</th>
+                    <th>Requested DateTime</th>
                     <th>User ID</th>
                     <th>Type</th>
                     <th class="hide-on-small-screen">Latitude</th>
@@ -161,12 +162,13 @@
             <tbody id="reportList">
                 <% if (reportList.length === 0) { %>
                     <tr>
-                        <td colspan="7">데이터 없음</td>
+                        <td colspan="8">데이터 없음</td>
                     </tr>
                 <% } else { %>
                     <% reportList.forEach(report => { %>
                         <tr>
                             <td data-th="Report ID"><%= report.reportId %></td>
+                            <td data-th="Requested DateTime"><%= report.requestedDateTime %></td>
                             <td data-th="User ID"><%= report.USERId %></td>
                             <td data-th="Type"><%= report.type === 0 ? '포트홀' : '공사현장' %></td>
                             <td class="hide-on-small-screen" data-th="Latitude"><%= report.Latitude %></td>
@@ -180,7 +182,7 @@
                             </td>
                         </tr>
                         <tr class="image-row" style="display: none;">
-                            <td colspan="7">
+                            <td colspan="8">
                                 <img src="..\<%= report.image %>" alt="Report Image" class="large-image">
                             </td>
                         </tr>
@@ -190,7 +192,7 @@
             <tbody id="deleteReportList" style="display: none;">
                 <% if (deleteReportList.length === 0) { %>
                     <tr>
-                        <td colspan="7">데이터 없음</td>
+                        <td colspan="8">데이터 없음</td>
                     </tr>
                 <% } else { %>
                     <% deleteReportList.forEach(report => { %>
@@ -209,7 +211,7 @@
                             </td>
                         </tr>
                         <tr class="image-row" style="display: none;">
-                            <td colspan="7">
+                            <td colspan="8">
                                 <img src="..\<%= report.image %>" alt="Report Image" class="large-image">
                             </td>
                         </tr>
