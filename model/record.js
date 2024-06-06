@@ -6,18 +6,18 @@ const mysql = require('./config.js');
 const record = {
     viewToday: async function (id) {
         try {
-            const [result] = await mysql.query("SELECT * FROM record WHERE USERId = ? AND date = CURDATE()", [id]);
+            const [result] = await mysql.execute("SELECT * FROM record WHERE USERId = ? AND DATE(date) = DATE(NOW())", [id]);
             return result;
         } catch (error) {
             console.log("record: 오늘 기록 조회 오류 발생" + error);
         }
-    },
-
+    },    
     viewMonthly: async function (id, year, month) {
         try {
+            const lastDate = new Date(year, month, 0).getDate();
             const [result] = await mysql.query(
                 "SELECT * FROM record WHERE USERId = ? AND date BETWEEN ? AND ? ORDER BY date ASC",
-                [id, `${year}-${month}-01`, `${year}-${month}-31`]
+                [id, `${year}-${month}-01`, `${year}-${month}-${lastDate}`]
             );
             return result;
         } catch (error) {
@@ -65,7 +65,7 @@ const record = {
             // 시작 시간 계산
             const [todayRecord] = await mysql.execute("SELECT * FROM record WHERE USERId = ? AND DATE(date) = DATE(NOW() - INTERVAL ? SECOND)", [id, dailyTime]);
             if (todayRecord.length === 0) {
-                await mysql.execute("INSERT INTO record (USERId, date, dailyTime) VALUES (?, DATE_SUB(NOW(), INTERVAL ? SECOND), ?)", [id, dailyTime, dailyTime]);
+                await mysql.execute("INSERT INTO record (USERId, date, dailyTime) VALUES (?, DATE(NOW() - INTERVAL ? SECOND), ?)", [id, dailyTime, dailyTime]);
             } else {
                 const totalTime = existDailyTime + dailyTime;
                 await mysql.execute("UPDATE record SET dailyTime = ? WHERE USERId = ? AND DATE(date) = DATE(NOW() - INTERVAL ? SECOND)", [dailyTime, id, dailyTime]);
