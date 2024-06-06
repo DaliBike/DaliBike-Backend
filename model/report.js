@@ -1,6 +1,5 @@
 "use strict";
 
-const { registerApprove } = require('../controller/report.js');
 const mysql = require('./config.js');
 const multer = require('multer');
 const fs = require('fs').promises;
@@ -22,18 +21,18 @@ const report = {
             console.log("report: detail 조회 오류 발생");
         }
     },
-    getNearbyReportListOfUser : async function(userId, latitude, longitude) {
+    getNearbyReportListOfUser : async function(userId, type, latitude, longitude) {
         try {
-            const [result] = await mysql.query("SELECT * FROM report WHERE userId = ? AND (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) < 0.020", [userId, latitude, longitude, latitude]);
+            const [result] = await mysql.query("SELECT * FROM report WHERE userId = ? AND type = ? AND (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) < 0.020", [userId, type, latitude, longitude, latitude]);
             return result.length == 0;
         } catch (error) {
             console.log("report: getNearbyReportListOfUser 오류 발생");
             throw error;
         }
     },
-    getNearbyReportList : async function(userId, latitude, longitude) {
+    getNearbyReportList : async function(userId, type, latitude, longitude) {
         try {
-            const [result] = await mysql.query("SELECT * FROM report WHERE userId != ? AND (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) < 0.020", [userId, latitude, longitude, latitude]);
+            const [result] = await mysql.query("SELECT * FROM report WHERE userId != ? AND type = ? AND (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) < 0.020", [userId, type, latitude, longitude, latitude]);
             return result;
         } catch (error) {
             console.log("report: getNearbyReportList 오류 발생");
@@ -65,7 +64,8 @@ const report = {
     },
     getManagerReportList : async function() {
         try {
-            const [result] = await mysql.query("SELECT * FROM report WHERE DispStatus = 0 ORDER BY requestedDateTime ASC");
+            const [result] = await mysql.execute("SELECT * FROM report WHERE DispStatus = 0 ORDER BY requestedDateTime ASC");
+            console.log("report: getManagerReportList 완료")
             return result;
         } catch (error) {
             console.log("report: getManagerReportList 오류 발생")
@@ -92,13 +92,15 @@ const report = {
     },
     getNearbySameReports : async function(reportId, type) {
         try {
-            const currentReport = await mysql.execute("SELECT latitude, longitude FROM report WHERE reportId = ? AND type = ?", [reportId, type]);
+            const [currentReport] = await mysql.execute("SELECT latitude, longitude FROM report WHERE reportId = ? AND type = ?", [reportId, type]);
+            console.log(currentReport)
             const currentLatitude = currentReport[0].latitude;
             const currentLongitude = currentReport[0].longitude;
-            const [result] = this.getNearbyReportList(reportId, currentLatitude, currentLongitude);
+            const [result] = await mysql.query("SELECT * FROM report WHERE reportId != ? AND type = ? AND (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) < 0.020", [reportId, type, currentLatitude, currentLongitude, currentLatitude]);
+            console.log(result)
             return result;
         } catch (error) {
-            console.log("report: getNearbySameReports 오류 발생")
+            console.log("report: getNearbySameReports 오류 발생\n" + error)
             throw error;
         }
     },

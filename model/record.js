@@ -67,7 +67,6 @@ const record = {
             if (todayRecord.length === 0) {
                 await mysql.execute("INSERT INTO record (USERId, date, dailyTime) VALUES (?, DATE(NOW() - INTERVAL ? SECOND), ?)", [id, dailyTime, dailyTime]);
             } else {
-                const totalTime = existDailyTime + dailyTime;
                 await mysql.execute("UPDATE record SET dailyTime = ? WHERE USERId = ? AND DATE(date) = DATE(NOW() - INTERVAL ? SECOND)", [dailyTime, id, dailyTime]);
             }
             return true;

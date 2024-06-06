@@ -177,8 +177,8 @@
                                 <button class="action-button" onclick="toggleImage(this, '<%= report.image %>')">사진 보기</button>
                             </td>
                             <td data-th="Actions">
-                                <button class="action-button approve-button" onclick="handleAction(<%= report.reportId %>, 'approve')">승인</button>
-                                <button class="action-button reject-button" onclick="handleAction(<%= report.reportId %>, 'reject')">거절</button>
+                                <button class="action-button approve-button" onclick="handleAction(<%= report.reportId %>, <%=report.type %>, 'approve')">승인</button>
+                                <button class="action-button reject-button" onclick="handleAction(<%= report.reportId %>, <%=report.type %>, 'reject')">거절</button>
                             </td>
                         </tr>
                         <tr class="image-row" style="display: none;">
@@ -206,8 +206,8 @@
                                 <button class="action-button" onclick="toggleImage(this, '<%= report.image %>')">사진 보기</button>
                             </td>
                             <td data-th="Actions">
-                                <button class="action-button approve-button" onclick="handleAction(<%= report.reportId %>, 'approve')">승인</button>
-                                <button class="action-button reject-button" onclick="handleAction(<%= report.reportId %>, 'reject')">거절</button>
+                                <button class="action-button approve-button" onclick="handleAction(<%= report.reportId %>, <%= report.type %>, 'approve')">승인</button>
+                                <button class="action-button reject-button" onclick="handleAction(<%= report.reportId %>, <%= report.type %>, 'reject')">거절</button>
                             </td>
                         </tr>
                         <tr class="image-row" style="display: none;">
@@ -252,14 +252,16 @@
             }
         }
 
-        async function handleAction(reportId, action) {
+        async function handleAction(reportId, type, action) {
             try {
-                const response = await fetch(`/report/${action}`, {
+                console.log(reportId, type, action)
+                console.log(`manager/report/${action}`)
+                const response = await fetch(`${action}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ reportId })
+                    body: JSON.stringify({ reportId, type })
                 });
                 const result = await response.json();
                 if (result.success) {

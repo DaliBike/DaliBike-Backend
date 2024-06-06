@@ -6,7 +6,7 @@ const reportController = {
         try {
             const {userId, type, latitude, longitude} = req.body;
             console.log(req.file)
-            const isAvailable = await report.getNearbyReportListOfUser(userId, latitude, longitude);
+            const isAvailable = await report.getNearbyReportListOfUser(userId, type, latitude, longitude);
             if (isAvailable) {
                 const image = req.file.path;
                 console.log(image);
@@ -37,7 +37,7 @@ const reportController = {
             const deleteReportList = await report.getManagerDeleteReportList();
             res.render("managerReportList", { reportList, deleteReportList });
         } catch (error) {
-            console.log("report: getManagerReportList controller 오류 발생" + error);
+            console.log("report: getManagerReportList controller 오류 발생\n" + error);
             res.status(500).json({ "result": "error" });
         }
     },
@@ -54,6 +54,7 @@ const reportController = {
         try {
             const reportId = req.body.reportId;
             const type = await report.getReportType(reportId);
+            console.log(reportId, type)
             const [nearbySameReports] = await report.getNearbySameReports(reportId, type);
             const numberOfReports = nearbySameReports.length;
             if (numberOfReports > 0) {
@@ -61,6 +62,9 @@ const reportController = {
                 for (restReport of nearbySameReports) {
                     await report.registerNearbyApprove(restReport.reportId, type, 100 / numberOfReports)
                 }
+            }
+            else {
+                await report.registerApprove(reportId, type, 100);
             }
         } catch (error) {
 
