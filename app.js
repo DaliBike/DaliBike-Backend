@@ -14,9 +14,7 @@ const postRouter = require("./routers/post");
 const reportRouter = require("./routers/report");
 const managerRouter = require("./routers/manager");
 
-const autoApprove = schedule.scheduleJob('* * * * * *', async function() {
-  reportController.registerAutoApprove();
-});
+//schedule.scheduleJob('* * * * * *', async function() {reportController.registerAutoApprove();});
 app.use(express.static('/'));
 app.use("/user", userRouter);
 app.use("/record", recordRouter);
