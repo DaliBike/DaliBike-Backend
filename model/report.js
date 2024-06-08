@@ -90,15 +90,32 @@ const report = {
             throw error;
         }
     },
+    getNumOfNearbySameReports : async function(reportId, type) {
+        try {
+            const [currentReport] = await mysql.execute("SELECT latitude, longitude FROM report WHERE reportId = ? AND type = ?", [reportId, type]);
+            console.log(currentReport)
+            if (currentReport !== null) {
+                const currentLatitude = currentReport[0].latitude;
+                const currentLongitude = currentReport[0].longitude;
+                const [result] = await mysql.query("SELECT COUNT(*) as count, reportId FROM report WHERE DispStatus = 0 AND reportId != ? AND type = ? AND (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) < 0.020", [reportId, type, currentLatitude, currentLongitude, currentLatitude]);
+                console.log(result)
+                return result
+            }
+            return null;
+        } catch (error) {
+            console.log("report: getNearbySameReports 오류 발생\n" + error)
+            throw error;
+        }
+    },
     getNearbySameReports : async function(reportId, type) {
         try {
             const [currentReport] = await mysql.execute("SELECT latitude, longitude FROM report WHERE reportId = ? AND type = ?", [reportId, type]);
             console.log(currentReport)
             const currentLatitude = currentReport[0].latitude;
             const currentLongitude = currentReport[0].longitude;
-            const [result] = await mysql.query("SELECT * FROM report WHERE reportId != ? AND type = ? AND (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) < 0.020", [reportId, type, currentLatitude, currentLongitude, currentLatitude]);
+            const [result] = await mysql.query("SELECT * FROM report WHERE DispStatus = 0 AND reportId != ? AND type = ? AND (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) < 0.020", [reportId, type, currentLatitude, currentLongitude, currentLatitude]);
             console.log(result)
-            return result;
+            return [result]
         } catch (error) {
             console.log("report: getNearbySameReports 오류 발생\n" + error)
             throw error;
@@ -106,9 +123,12 @@ const report = {
     },
     registerApprove : async function(reportId, type, point) {
         try {
+            const [userInfo] = await mysql.execute("SELECT USERId, image FROM report WHERE reportId = ?", [reportId]);
+            const userId = userInfo[0].USERId;
+            const imagePath = userInfo[0].image;
             await mysql.execute("UPDATE report SET DispStatus = 1 WHERE reportId = ? AND type = ?", [reportId, type]);
-            await mysql.query("UPDATE USER SET point = point + ? WHERE userId = (SELECT USERId FROM report WHERE reportId = ?)", [point, reportId]);
-            console.log("report: registerApprove 완료");
+            await mysql.execute("UPDATE USER SET Points = Points + ? WHERE USERId = ?", [point, userId]);
+            console.log(`report: registerApprove 완료 (${reportId}, ${type}, ${point})`);
             return true;
         } catch (error) {
             console.log("report: registerApprove 오류 발생")
@@ -117,9 +137,13 @@ const report = {
     },
     registerNearbyApprove : async function(reportId, type, point) {
         try {
-            await mysql.execute("DELETE FROM report WHERE reportId = ? AND type = ?", [reportId, type]);
-            await mysql.execute("UPDATE USER SET point = point + ? WHERE userId = (SELECT USERId FROM report WHERE reportId = ?)", [point, reportId]);
-            console.log("report: registerNearbyApprove 완료");
+            const [userInfo] = await mysql.execute("SELECT USERId, image FROM report WHERE reportId = ?", [reportId]);
+            const userId = userInfo[0].USERId;
+            const imagePath = userInfo[0].image;
+            await mysql.execute("DELETE FROM report WHERE reportId = ? AND type = ? AND DispStatus = 0", [reportId, type]);
+            await this.deleteImage(imagePath);
+            await mysql.execute("UPDATE USER SET Points = Points + ? WHERE USERId = ?", [point, userId]);
+            console.log(`report: registerNearbyApprove 완료 (${reportId}, ${type}, ${point})`);
         } catch (error) {
             console.log("report: registerNearbyApprove 오류 발생")
             throw error;
@@ -127,8 +151,27 @@ const report = {
     },
     getAutoApproveReportList : async function() {
         try {
-            const [result] = await mysql.execute("");
-            return result;
+            const [reportList] = this.getManagerReportList();
+            console.log(reportList)
+            // 각 제보에 대해 인근 제보가 5개 이상인 경우 자동 승인
+            for (report of reportList) {
+                const reportId = report.reportId;
+                const type = report.type;
+                console.log("현재 report >>> " + reportId + " " + type)
+                const [nearbySameReports] = this.getNumOfNearbySameReports(reportId, type);
+                if (nearbySameReports) {
+                    const numberOfReports = nearbySameReports.count;
+                    if (numberOfReports >= 5) {
+                        await this.registerApprove(reportId, type, 100 / numberOfReports);
+                        const [restNearbySameReports] = this.getNearbySameReports(reportId, type);
+                        console.log(restNearbySameReports)
+                        for (restReport of restNearbySameReports) {
+                            await this.registerNearbyApprove(restReport.reportId, type, 100 / numberOfReports);
+                        }
+                    }
+                }
+            }
+            return true;
         } catch (error) {
             console.log("report: getAutoApproveReportList 오류 발생")
             throw error;

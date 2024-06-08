@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manager Report List</title>
+    <title>DaliBike</title>
     <style>
         @font-face {
             font-family: 'KBO-Dia-Gothic_medium';
@@ -141,7 +141,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Manager Report List</h1>
+        <h1>Manage Report List</h1>
         <div style="text-align: center;">
             <button class="pendingList selected" onclick="toggleList('reportList', this)">등록 대기 목록</button>
             <button class="pendingList" onclick="toggleList('deleteReportList', this)">삭제 대기 목록</button>
@@ -265,14 +265,16 @@
                 });
                 const result = await response.json();
                 if (result.success) {
-                    alert(`Report ${action}d successfully`);
+                    alert(`Report ${action}d successfully!!!!!!!!!!!!!!!!!!!!!!!!!!!!`);
                     location.reload();
                 } else {
                     alert(`Failed to ${action} report`);
+                    location.reload();
                 }
             } catch (error) {
                 console.error('Error:', error);
                 alert('An error occurred while processing your request.');
+                location.reload();
             }
         }
     </script>

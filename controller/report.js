@@ -55,26 +55,36 @@ const reportController = {
             const reportId = req.body.reportId;
             const type = await report.getReportType(reportId);
             console.log(reportId, type)
-            const [nearbySameReports] = await report.getNearbySameReports(reportId, type);
-            const numberOfReports = nearbySameReports.length;
+            const [nearbySameReports] = await report.getNumOfNearbySameReports(reportId, type);
+            const numberOfReports = nearbySameReports.count;
+            console.log("제보 수 : " + numberOfReports)
             if (numberOfReports > 0) {
                 await report.registerApprove(reportId, type, 100 / numberOfReports);
-                for (restReport of nearbySameReports) {
+                const [restNearbySameReports] = await report.getNearbySameReports(reportId, type);
+                for (restReport of restNearbySameReports) {
                     await report.registerNearbyApprove(restReport.reportId, type, 100 / numberOfReports)
                 }
+                res.status(200).json({ "success": true, "result": "success(n)" });
             }
             else {
                 await report.registerApprove(reportId, type, 100);
+                res.status(200).json({ "success": true, "result": "success(1)" });
             }
         } catch (error) {
-
+            console.log("report: registerApprove controller 오류 발생" + error);
+            res.status(500).json({ "result": "error" });
         }
     },
     registerReject : async function(req, res) {
 
     },
     registerAutoApprove : async function(req, res) {
-        const autoApproveReportList = await report.getAutoApproveReportList();
+        try {
+            const isRefreshed = await report.getAutoApproveReportList();
+            console.log("report 자동 승인 새로고침 여부 : " + isRefreshed)
+        } catch (error) {
+            console.error("report: registerAutoApprove controller 오류 발생" + error);
+        }
     },
     registerAutoReject : async function(req, res) {
     },

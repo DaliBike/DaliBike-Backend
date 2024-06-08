@@ -2,6 +2,8 @@ const express = require('express')
 const path = require('path')
 const app = express()
 const port = 3000
+const schedule = require('node-schedule');
+const reportController = require("./controller/report");
 
 app.use(express.json());
 
@@ -12,6 +14,9 @@ const postRouter = require("./routers/post");
 const reportRouter = require("./routers/report");
 const managerRouter = require("./routers/manager");
 
+const autoApprove = schedule.scheduleJob('* * * * * *', async function() {
+  reportController.registerAutoApprove();
+});
 app.use(express.static('/'));
 app.use("/user", userRouter);
 app.use("/record", recordRouter);
