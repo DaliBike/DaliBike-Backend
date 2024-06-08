@@ -1,39 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>관리자 로그인</title>
+  <style>
+    @font-face {
+      font-family: 'KBO-Dia-Gothic_medium';
+      src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-2@1.0/KBO-Dia-Gothic_medium.woff') format('woff');
+      font-weight: 500;
+      font-style: normal;
+    }
+    * {
+      font-family: 'KBO-Dia-Gothic_medium', sans-serif;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    form {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 300px;
+    }
+
+    fieldset {
+      border: none;
+      margin-bottom: 15px;
+    }
+
+    legend {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 5px;
+    }
+
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    .login-button {
+      width: 100%;
+      padding: 10px;
+      background-color: #c0d587;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .login-button:hover {
+      background-color: #8d9f5a;
+    }
+
+    .login-result {
+      display:inline-block;
+      margin-top: 10px;
+      text-align: center;
+      font-size: 14px;
+    }
+  </style>
+</head>
 <body>
+  <div class="container">
     <h2>관리자 로그인</h2>
-    <form name="login">
-      <fieldset>
-        <legend>ID</legend>
-        <input type="text" name="managerid" />
-      </fieldset>
-      <fieldset>
-        <legend>Password</legend>
-        <input type="password" name="password" />
-      </fieldset>
+  <form name="login">
+    <fieldset>
+      <legend>ID</legend>
+      <input type="text" name="managerid" />
+    </fieldset>
+    <fieldset>
+      <legend>Password</legend>
+      <input type="password" name="password" />
+    </fieldset>
+    <button type="button" class="login-button" onclick="clickLogin()">로그인</button>
+  </form>
+  <div class="login-result"></div>
+  </div>
 
-      <button type="button" onclick="clickLogin()">로그인</button>
-    </form>
-    <div class="login-result"></div>
+  <script>
+    async function clickLogin() {
+      const form = document.forms["login"];
+      const data = {
+        id: form.managerid.value,
+        pw: form.password.value
+      }
 
-    <script>
-      function clickLogin() {
-        const form = document.forms["login"];
-        const data = {
-          managerId: form.managerId.value,
-          password: form.password.value
+      try {
+        const response = await fetch("/manager/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
         }
 
-        axios({
-          method: "POST",
-          url: "/manager/login",
-          data: data
-        }).then((res) => {
-          const {isSuccess, msg} = res.data
+        const resData = await response.json();
+        const result = resData[0].result;
 
+        // 로그인 성공 시 페이지 이동
+        console.log(result);
+        if (result === "true") {
+          //POST 방식으로 로그인 성공 시 페이지 이동
+          window.location.href = "/manager/report/list";
+        } else {
+          // 로그인 실패 시 메시지 표시
           const element = document.querySelector(".login-result");
-          element.innerHTML = msg;
-
-          const color = isSuccess ? "blue" : "red";
-          element.style.color = color
-        })
+          element.innerHTML = "로그인 실패";
+          element.style.color = "red";
+        }
+      } catch (error) {
+        console.error("Error:", error);
       }
-    </script>
+    }
+  </script>
+</body>
+</html>

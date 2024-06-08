@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DaliBike</title>
+    <style>
+        @font-face {
+            font-family: 'KBO-Dia-Gothic_medium';
+            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-2@1.0/KBO-Dia-Gothic_medium.woff') format('woff');
+            font-weight: 500;
+            font-style: normal;
+        }
+        * {
+            font-family: 'KBO-Dia-Gothic_medium', sans-serif;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .pendingList {
+            background-color: #8d9f5a;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 2px;
+        }
+
+        .selected {
+            background-color: #5d683f;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 1000px;
+            overflow: auto; /* Allows scrolling */
+            max-height: 500px; /* Sets the maximum height of the container */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        button {
+            font-size: 16px;
+        }
+
+        .action-button {
+            color: #fff;
+            background-color: #8d9f5a;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 2px;
+        }
+        
+        .action-button:hover {
+            background-color: #7f8c5a;
+        }
+
+        .approve-button {
+            background-color: #4CAF50; /* Green */
+        }
+
+        .approve-button:hover {
+            background-color: #3a853e;
+        }
+
+        .reject-button {
+            background-color: #f44336; /* Red */
+        }
+
+        .reject-button:hover {
+            background-color: #ce3230;
+        }
+
+        .large-image {
+            max-width: 60%;
+            height: auto;
+        }
+
+        @media screen and (max-width: 800px) {
+            table, th, td {
+                font-size: 0.8em; /* Adjusts the font size when the screen is 800px or less */
+            }
+        }
+
+        @media screen and (max-width: 500px) {
+            .hide-on-small-screen {
+                display: none; /* Hides the elements when the screen is 500px or less */
+            }
+
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+
+            td:before {
+                content: attr(data-th);
+                font-weight: bold;
+                display: inline-block;
+                width: 100%;
+                background-color: #f4f4f4;
+            }
+
+            .large-image {
+                max-width: 100%;
+                height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Manage Report List</h1>
+        <div style="text-align: center;">
+            <button class="pendingList selected" onclick="toggleList('reportList', this)">등록 대기 목록</button>
+            <button class="pendingList" onclick="toggleList('deleteReportList', this)">삭제 대기 목록</button>
+        </div>
+        <table id="reportTable">
+            <thead>
+                <tr>
+                    <th>Report ID</th>
+                    <th>Requested DateTime</th>
+                    <th>User ID</th>
+                    <th>Type</th>
+                    <th class="hide-on-small-screen">Latitude</th>
+                    <th class="hide-on-small-screen">Longitude</th>
+                    <th>Image</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="reportList">
+                <% if (reportList.length === 0) { %>
+                    <tr>
+                        <td colspan="8">데이터 없음</td>
+                    </tr>
+                <% } else { %>
+                    <% reportList.forEach(report => { %>
+                        <tr>
+                            <td data-th="Report ID"><%= report.reportId %></td>
+                            <td data-th="Requested DateTime"><%= report.requestedDateTime %></td>
+                            <td data-th="User ID"><%= report.USERId %></td>
+                            <td data-th="Type"><%= report.type === 0 ? '포트홀' : '공사현장' %></td>
+                            <td class="hide-on-small-screen" data-th="Latitude"><%= report.Latitude %></td>
+                            <td class="hide-on-small-screen" data-th="Longitude"><%= report.Longitude %></td>
+                            <td data-th="Image">
+                                <button class="action-button" onclick="toggleImage(this, '<%= report.image %>')">사진 보기</button>
+                            </td>
+                            <td data-th="Actions">
+                                <button class="action-button approve-button" onclick="handleAction(<%= report.reportId %>, <%=report.type %>, 'approve')">승인</button>
+                                <button class="action-button reject-button" onclick="handleAction(<%= report.reportId %>, <%=report.type %>, 'reject')">거절</button>
+                            </td>
+                        </tr>
+                        <tr class="image-row" style="display: none;">
+                            <td colspan="8">
+                                <img src="..\<%= report.image %>" alt="Report Image" class="large-image">
+                            </td>
+                        </tr>
+                    <% }); %>
+                <% } %>
+            </tbody>
+            <tbody id="deleteReportList" style="display: none;">
+                <% if (deleteReportList.length === 0) { %>
+                    <tr>
+                        <td colspan="8">데이터 없음</td>
+                    </tr>
+                <% } else { %>
+                    <% deleteReportList.forEach(report => { %>
+                        <tr>
+                            <td data-th="Report ID"><%= report.reportId %></td>
+                            <td data-th="User ID"><%= report.USERId %></td>
+                            <td data-th="Type"><%= report.type === 0 ? '포트홀' : '공사현장' %></td>
+                            <td class="hide-on-small-screen" data-th="Latitude"><%= report.Latitude %></td>
+                            <td class="hide-on-small-screen" data-th="Longitude"><%= report.Longitude %></td>
+                            <td data-th="Image">
+                                <button class="action-button" onclick="toggleImage(this, '<%= report.image %>')">사진 보기</button>
+                            </td>
+                            <td data-th="Actions">
+                                <button class="action-button approve-button" onclick="handleAction(<%= report.reportId %>, <%= report.type %>, 'approve')">승인</button>
+                                <button class="action-button reject-button" onclick="handleAction(<%= report.reportId %>, <%= report.type %>, 'reject')">거절</button>
+                            </td>
+                        </tr>
+                        <tr class="image-row" style="display: none;">
+                            <td colspan="8">
+                                <img src="..\<%= report.image %>" alt="Report Image" class="large-image">
+                            </td>
+                        </tr>
+                    <% }); %>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function toggleImage(button, imagePath) {
+            const currentRow = button.closest('tr');
+            const imageRow = currentRow.nextElementSibling;
+
+            if (imageRow.style.display === 'none') {
+                imageRow.style.display = 'table-row';
+                button.textContent = '사진 숨기기';
+            } else {
+                imageRow.style.display = 'none';
+                button.textContent = '사진 보기';
+            }
+        }
+
+        function toggleList(listId, button) {
+            const reportList = document.getElementById('reportList');
+            const deleteReportList = document.getElementById('deleteReportList');
+            const buttons = document.querySelectorAll('.pendingList');
+
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            button.classList.add('selected');
+
+            if (listId === 'reportList') {
+                reportList.style.display = 'table-row-group';
+                deleteReportList.style.display = 'none';
+            } else {
+                reportList.style.display = 'none';
+                deleteReportList.style.display = 'table-row-group';
+            }
+        }
+
+        async function handleAction(reportId, type, action) {
+            try {
+                console.log(reportId, type, action)
+                console.log(`manager/report/${action}`)
+                const response = await fetch(`${action}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ reportId, type })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert(`Report ${action}d successfully!!!!!!!!!!!!!!!!!!!!!!!!!!!!`);
+                    location.reload();
+                } else {
+                    alert(`Failed to ${action} report`);
+                    location.reload();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while processing your request.');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>
