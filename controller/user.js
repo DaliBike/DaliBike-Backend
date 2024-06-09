@@ -1,4 +1,5 @@
 const user = require("../model/user");
+const { record } = require("./record");
 
 const userController = {
     login : async (req, res) => {
@@ -62,7 +63,7 @@ const userController = {
     mainPage : async (req, res) => {
         try {
             const {id} = req.body;
-            const result = await user.mainPage(id);
+            const result = await record.viewToday(id);
             res.json(result);
         } catch (error) {
             console.log("user: mainPage 컨트롤러 오류 발생");
