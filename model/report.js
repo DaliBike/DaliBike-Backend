@@ -93,7 +93,13 @@ const report = {
     },
     getManagerDeleteReportList : async function() {
         try {
-            const [result] = await mysql.execute("SELECT * FROM reportRemovalRequest ORDER BY requestedDateTime ASC");
+            const [result] = await mysql.execute(`
+                SELECT r.reportId, r.type, r.image AS reportImage, rrr.image AS removalRequestImage, rrr.requestedDateTime, rrr.USERId
+                FROM reportRemovalRequest rrr
+                JOIN report r ON rrr.reportId = r.reportId
+                ORDER BY rrr.requestedDateTime ASC
+            `);
+            
             return result;
         } catch (error) {
             console.log("report: getManagerDeleteReportList 오류 발생")

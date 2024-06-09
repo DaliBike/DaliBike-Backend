@@ -9,6 +9,7 @@ const recordController = {
             else                        res.json(result);
         } catch (err) {
             console.log("record: 오늘 기록 조회 컨트롤러 오류 : " + err)
+            res.json({ "result": "error" });
         }
     },
 
@@ -20,6 +21,7 @@ const recordController = {
             else                        res.json(result);
         } catch (err) {
             console.log("record: 월별 기록 조회 컨트롤러 오류")
+            res.json({ "result": "error" });
         }
     },
 
@@ -31,6 +33,7 @@ const recordController = {
             res.json(result);
         } catch (err) {
             console.log("record: 월별 기록 조회 컨트롤러 오류")
+            res.json({ "result": "error" });
         }
     },
 
@@ -42,6 +45,7 @@ const recordController = {
             else                    res.json(result);
         } catch (err) {
             console.log("record: 내 랭킹 조회 컨트롤러 오류")
+            res.json({ "result": "error" });
         }
     },
 
