@@ -8,6 +8,7 @@ const postController = {
             res.json(result);
         } catch (err) {
             console.log("post: 게시글 목록 조회 컨트롤러 오류")
+            res.json({ "result": "error" });
         }
     },
 
@@ -18,6 +19,7 @@ const postController = {
             res.json(result);
         } catch (err) {
             console.log("post: 게시글 목록 조회 컨트롤러 오류")
+            res.json({ "result": "error" });
         }
     },
 
@@ -28,6 +30,7 @@ const postController = {
             res.json(result);
         } catch (err) {
             console.log("post: 내 게시글 조회 컨트롤러 오류");
+            res.json({ "result": "error" });
         }
     },
 
@@ -48,6 +51,7 @@ const postController = {
             res.json(result3);
         } catch (err) {
             console.log("post: 게시글 선택 컨트롤러 오류")
+            res.json({ "result": "error" });
         }
     },
 
@@ -58,6 +62,7 @@ const postController = {
             res.json(result);
         } catch (err) {
             console.log("post: 게시글 작성 컨트롤러 오류");
+            res.json({ "result": "error" });
         }
     },
 
@@ -68,6 +73,7 @@ const postController = {
             res.json(result);
         } catch (err) {
             console.log("post: 게시글 삭제 컨트롤러 오류");
+            res.json({ "result": "error" });
         }
     },
 
@@ -78,6 +84,7 @@ const postController = {
             res.json(result);
         } catch (err) {
             console.log("post: 게시글 좋아요 컨트롤러 오류");
+            res.json({ "result": "error" });
         }
     },
     
@@ -87,6 +94,7 @@ const postController = {
             res.json(result);
         } catch (err) {
             console.log("post: 게시글 좋아요 컨트롤러 오류");
+            res.json({ "result": "error" });
         }
     }
     

@@ -39,6 +39,7 @@ const userController = {
             res.json(result);
         } catch (error) {
             console.log("user: idRedundancyCheck 컨트롤러 오류 발생");
+            res.json({ "result": "error" });
         }
     },
     nicknameRedundancyCheck : async (req, res) => {
@@ -48,6 +49,7 @@ const userController = {
             res.json(result);
         } catch (error) {
             console.log("user: nicknameRedundancyCheck 컨트롤러 오류 발생");
+            res.json({ "result": "error" });
         }
     },
     myPage : async (req, res) => {
@@ -57,16 +59,18 @@ const userController = {
             res.json(result);
         } catch (error) {
             console.log("user: mypage 컨트롤러 오류 발생");
+            res.json({ "result": "error" });
         }
     },
     mainPage : async (req, res) => {
         try {
             const {id} = req.body;
             const result = await user.mainPage(id);
-            if (result[0].dailyTime === null)   res.json({"nickname": result[0].Nickname, "dailyTime": 0})
+            if (result[0].dailyTime === null)   res.json({"nickname": result[0].Nickname, "dailyTime": 0, "totalTime": result[0].totalTime})
             else                            res.json(result);
         } catch (error) {
             console.log("user: mainPage 컨트롤러 오류 발생 " + error);
+            res.json({ "result": "error" });
         }
     },
 }

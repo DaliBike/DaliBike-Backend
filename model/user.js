@@ -59,16 +59,19 @@ const user = {
     mainPage: async function(id) {
         try {
             const [result] = await mysql.execute(`
-            SELECT u.Nickname, r.dailyTime
-            FROM USER u
-            LEFT JOIN record r ON u.USERId = r.USERId AND r.\`DATE\` = CURDATE()
-            WHERE u.USERId = ?
-          `, [id]);
+                SELECT u.Nickname, r.dailyTime, COALESCE(SUM(r2.dailyTime), 0) AS totalTime
+                FROM USER u
+                LEFT JOIN record r ON u.USERId = r.USERId AND r.\`DATE\` = CURDATE()
+                LEFT JOIN record r2 ON u.USERId = r2.USERId
+                WHERE u.USERId = ?
+                GROUP BY u.USERId, r.dailyTime, u.Nickname;
+            `, [id]);
             return result;
         } catch (error) {
             console.log("user: mainPage 조회 오류 발생", error);
         }
     }
+    
     
 }
 

@@ -8,6 +8,7 @@ const commentController = {
             res.json(result);
         } catch (err) {
             console.log("comment: 댓글 작성 컨트롤러 오류")
+            res.json({ "result": "error" });
         }
     },
 
@@ -19,6 +20,7 @@ const commentController = {
             res.json(result);
         } catch (err) {
             console.log("comment: 댓글 삭제 컨트롤러 오류")
+            res.json({ "result": "error" });
         }
     },
 
@@ -29,6 +31,7 @@ const commentController = {
             res.json(result);
         } catch (err) {
             console.log("comment: 댓글 조회 컨트롤러 오류")
+            res.json({ "result": "error" });
         }
     }
     
