@@ -15,7 +15,7 @@ const report = {
     },
     getReportDetails : async function(id) {
         try {
-            const [result] = await mysql.query("SELECT type, image FROM Store WHERE reportId = ?", [id]);
+            const [result] = await mysql.query("SELECT reportId, type, image FROM report WHERE reportId = ?", [id]);
             return result;
         } catch (error) {
             console.log("report: detail 조회 오류 발생");
@@ -23,10 +23,19 @@ const report = {
     },
     getNearbyReportListOfUser : async function(userId, type, latitude, longitude) {
         try {
-            const [result] = await mysql.query("SELECT * FROM report WHERE userId = ? AND type = ? AND (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) < 0.020", [userId, type, latitude, longitude, latitude]);
+            const [result] = await mysql.query("SELECT * FROM report WHERE USERId = ? AND type = ? AND (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) < 0.020", [userId, type, latitude, longitude, latitude]);
             return result.length == 0;
         } catch (error) {
             console.log("report: getNearbyReportListOfUser 오류 발생");
+            throw error;
+        }
+    },
+    getNearbyReportRemovalListOfUser : async function (userId, reportId) {
+        try {
+            const [result] = await mysql.query("SELECT * FROM reportRemovalRequest WHERE USERId = ? AND reportId = ?", [userId, reportId]);
+            return result.length == 0;
+        } catch (error) {
+            console.log("report: getNearbyReportRemovalListOfUser 오류 발생");
             throw error;
         }
     },
@@ -46,6 +55,16 @@ const report = {
             return true;
         } catch (error) {
             console.log("report: addReport 오류 발생 " + error)
+            throw error;
+        }
+    },
+    addReportRemoval : async function(userId, reportId, imagePath) {
+        try {
+            await mysql.query("INSERT INTO reportRemovalRequest (USERId, reportId, image, requestedDateTime) VALUES (?, ?, ?, NOW())", [userId, reportId, imagePath]);
+            console.log("report: addReportRemoval 완료")
+            return true;
+        } catch (error) {
+            console.log("report: addReportRemoval 오류 발생")
             throw error;
         }
     },
