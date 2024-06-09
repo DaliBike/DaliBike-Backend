@@ -54,21 +54,21 @@ const reportController = {
         try {
             const reportId = req.body.reportId;
             const type = await report.getReportType(reportId);
-            console.log(reportId, type)
+            console.log("report 승인 : " + reportId, type)
             const [nearbySameReports] = await report.getNumOfNearbySameReports(reportId, type);
             const numberOfReports = nearbySameReports.count;
-            console.log("제보 수 : " + numberOfReports)
+            console.log("근처 유사 제보 수 : " + numberOfReports)
             if (numberOfReports > 0) {
                 await report.registerApprove(reportId, type, 100 / numberOfReports);
                 const [restNearbySameReports] = await report.getNearbySameReports(reportId, type);
                 for (restReport of restNearbySameReports) {
                     await report.registerNearbyApprove(restReport.reportId, type, 100 / numberOfReports)
                 }
-                res.status(200).json({ "success": true, "result": "success(n)" });
+                res.status(200).json({ "success": true, "result": "approve success(n)" });
             }
             else {
                 await report.registerApprove(reportId, type, 100);
-                res.status(200).json({ "success": true, "result": "success(1)" });
+                res.status(200).json({ "success": true, "result": "approve success(1)" });
             }
         } catch (error) {
             console.log("report: registerApprove controller 오류 발생" + error);
@@ -76,7 +76,16 @@ const reportController = {
         }
     },
     registerReject : async function(req, res) {
-
+        try {
+            const reportId = req.body.reportId;
+            const type = await report.getReportType(reportId);
+            console.log("report 거절 : " + reportId, type);
+            await report.registerReject(reportId, type);
+            res.status(200).json({ "success": true, "result" : "reject success"})
+        } catch (eroor) {
+            console.log("report: registerReject controller 오류 발생\n" + eroor)
+            res.status(500).json({ "result": "error" })
+        }
     },
     registerAutoApprove : async function(req, res) {
         try {
@@ -87,6 +96,7 @@ const reportController = {
         }
     },
     registerAutoReject : async function(req, res) {
+                
     },
 }
 
