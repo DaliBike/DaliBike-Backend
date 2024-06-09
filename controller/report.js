@@ -152,6 +152,22 @@ const reportController = {
     registerAutoReject : async function(req, res) {
 
     },
+    uploadImage : async function(req, res) {
+        try {
+            const image = req.file.path;
+            console.log(image);
+            if (image === undefined) {
+                res.status(400).json({ "result": "no images" });
+            }
+            else {
+                imagePath = path.join(__dirname, '..', 'public', 'reportImages');
+                res.status(200).json({ "result": "success" });
+            }
+        } catch (error) {
+            console.log("uploadImage controller 오류 발생" + error);
+            res.status(500).json({ "result": "error" });
+        }
+    },
 }
 
 module.exports = reportController;
