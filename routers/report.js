@@ -44,7 +44,7 @@ const test = multer(
 
 router.post("/add", upload.single('image'), reportController.addReport);
 router.post("/addRemoval", uploadRemoval.single('image'), reportController.addReportRemoval);
-router.get("/details/image/:image", reportController.getReportImage);
+router.get("/details/image/:id", reportController.getReportImage);
 router.get("/details/:id", reportController.getReportDetails);
 router.post("/uploadImage", test.single('image'), reportController.uploadImage);
 

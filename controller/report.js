@@ -67,10 +67,7 @@ const reportController = {
         try {
             const reportId = req.params.id;
             const [result] = await report.getReportDetails(reportId);
-            res.status(200).json(result);
-            // 프론트에서는 getReportDetails, getReportImage 따로따로 불러와서 사용해야해 
-            // 동시에 해볼려했는데 안됨...
-            // 이미지를 얻으려면 여기에 있는 result의 image를 다시 서버에 get("/report/details/image/:image")로 요청해야해 뭔말알?
+            res.status(200).json({ "reportId": result.reportId ,"type": result.type });
         } catch (error) {
             console.log("report: getReportDetails controller 오류 발생" + error);
             res.status(500).json({ "result": "error" });
@@ -97,7 +94,9 @@ const reportController = {
     },
     getReportImage : async function(req, res) {
         try {
-            const imagePath = path.join(__dirname, '..', 'public', 'reportImages', req.params.image);
+            const reportId = req.params.id;
+            const currentReport = await report.getReportDetails(reportId);
+            const imagePath = path.join(__dirname, '..', currentReport[0].image)
             res.sendFile(imagePath);
         } catch (error) {
             console.log("report: getReportImage controller 오류 발생" + error);
@@ -168,6 +167,14 @@ const reportController = {
             res.status(500).json({ "result": "error" });
         }
     },
+    removalApprove : async function(req, res) {
+        try {
+
+        } catch (error) {
+            console.log("report: removalApprove controller 오류 발생 " + error);
+            res.status(500).json({ "result": error });
+        }
+    }
 }
 
 module.exports = reportController;

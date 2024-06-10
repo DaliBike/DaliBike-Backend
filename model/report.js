@@ -19,6 +19,7 @@ const report = {
             return result;
         } catch (error) {
             console.log("report: detail 조회 오류 발생");
+            console.log(error)
         }
     },
     getNearbyReportListOfUser : async function(userId, type, latitude, longitude) {
@@ -203,12 +204,14 @@ const report = {
         }
     },
     registerReject : async function(reportId, type) {
-        const [userInfo] = await mysql.execute("SELECT USERId, image FROM report WHERE reportId = ?", [reportId]);
-            const userId = userInfo[0].USERId;
+        const [userInfo] = await mysql.execute("SELECT image FROM report WHERE reportId = ?", [reportId]);
             const imagePath = userInfo[0].image;
             await mysql.execute("DELETE FROM report WHERE reportId = ? AND type = ? AND DispStatus = 0", [reportId, type]);
             await this.deleteImage(imagePath);
             console.log(`report: registerReject 완료 (${reportId}, ${type}, ${point})`);
+    },
+    removalApprove : async function(reportId, ) {
+
     }
 }
 
