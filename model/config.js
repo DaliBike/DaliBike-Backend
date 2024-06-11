@@ -7,7 +7,8 @@ const pool = mysql.createPool({
     password: 'dalibike',
     database: 'DALI_BIKE',
     connectionLimit: 10,
-    multipleStatements: true
+    multipleStatements: true,
+    timezone: '+09:00'
 });
 
 pool.getConnection()

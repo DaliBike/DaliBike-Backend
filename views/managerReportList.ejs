@@ -179,8 +179,8 @@
                                             <button class="action-button" onclick="toggleImage_register(this, '<%= report.image %>')">사진 보기</button>
                                         </td>
                                         <td data-th="Actions">
-                                            <button class="action-button approve-button" onclick="handleAction(<%= report.reportId %>, <%= report.type %>, 'registerApprove')">승인</button>
-                                            <button class="action-button reject-button" onclick="handleAction(<%= report.reportId %>, <%= report.type %>, 'registerReject')">거절</button>
+                                            <button class="action-button approve-button" onclick="handleAction1(<%= report.reportId %>, <%= report.type %>, 'registerApprove')">승인</button>
+                                            <button class="action-button reject-button" onclick="handleAction1(<%= report.reportId %>, <%= report.type %>, 'registerReject')">거절</button>
                                         </td>
                                     </tr>
                                     <tr class="image-row1" style="display: none;">
@@ -231,8 +231,8 @@
                             <button class="action-button" onclick="toggleImage_delete(this, '<%= report.removalRequestImage %>')">사진 보기</button>
                         </td>
                         <td data-th="Actions">
-                            <button class="action-button approve-button" onclick="handleAction(<%= report.reportId %>, <%= report.type %>, 'removalApprove')">승인</button>
-                            <button class="action-button reject-button" onclick="handleAction(<%= report.reportId %>, <%= report.type %>, 'removalReject')">거절</button>
+                            <button class="action-button approve-button" onclick="handleAction2(<%= report.reportId %>, `<%= report.USERId %>`, 'removalApprove')">승인</button>
+                            <button class="action-button reject-button" onclick="handleAction2(<%= report.reportId %>, `<%= report.USERId %>`, 'removalReject')">거절</button>
                         </td>
                     </tr>
                     <tr class="image-row1" style="display: none;">
@@ -318,31 +318,56 @@ function toggleImage_delete(button, imageUrl) {
     button.textContent = nextRow.style.display === 'none' ? '사진 보기' : '사진 숨기기';
 }
 
-async function handleAction(reportId, type, action) {
-            try {
-                console.log(reportId, type, action)
-                console.log(`manager/report/${action}`)
-                const response = await fetch(`${action}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ reportId, type })
-                });
-                const result = await response.json();
-                if (result.success) {
-                    alert(`Report ${action}d successfully!!!!!!!!!!!!!!!!!!!!!!!!!!!!`);
-                    location.reload();
-                } else {
-                    alert(`Failed to ${action} report`);
-                    location.reload();
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('An error occurred while processing your request.');
-                location.reload();
-            }
+async function handleAction1(reportId, type, action) {
+    try {
+        console.log("승인 대기 항목 : " + reportId, type, action)
+        console.log(`manager/report/${action}`)
+        const response = await fetch(`${action}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ reportId, type })
+        });
+        const result = await response.json();
+        if (result.success) {
+            alert(`Report ${action}d successfully!!!!!!!!!!!!!!!!!!!!!!!!!!!!`);
+            location.reload();
+        } else {
+            alert(`Failed to ${action} report`);
+            location.reload();
         }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while processing your request.');
+        location.reload();
+    }
+}
+    
+async function handleAction2(reportId, USERId, action) {
+    try {
+        console.log("삭제 대기 항목 : " + reportId, USERId, action)
+        const response = await fetch(`${action}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ reportId, USERId })
+        });
+        const result = await response.json();
+        if (result.success) {
+            alert(`Report ${action}d successfully!!!!!!!!!!!!!!!!!!!!!!!!!!!!`);
+            location.reload();
+        } else {
+            alert(`Failed to ${action} report`);
+            location.reload();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while processing your request.');
+        location.reload();
+    }
+}
     </script>
 </body>
 </html>
