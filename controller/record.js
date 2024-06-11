@@ -5,9 +5,11 @@ const recordController = {
         try {
             const {id} = req.body;
             const result = await record.viewToday(id);
-            res.json(result);
+            if (result.length === 0)    res.json({"id": id, "dailyTime": 0})
+            else                        res.json(result);
         } catch (err) {
             console.log("record: 오늘 기록 조회 컨트롤러 오류 : " + err)
+            res.json({ "result": "error" });
         }
     },
 
@@ -15,9 +17,11 @@ const recordController = {
         try {
             const {id, year, month} = req.body;
             const result = await record.viewMonthly(id, year, month);
-            res.json(result);
+            if (result.length === 0)   res.json({"id": id, "dailyTime": 0}) // 월간 기록이 아예 없는 경우 이거만 던짐
+            else                        res.json(result);
         } catch (err) {
             console.log("record: 월별 기록 조회 컨트롤러 오류")
+            res.json({ "result": "error" });
         }
     },
 
@@ -25,9 +29,11 @@ const recordController = {
         try {
             const {year, month} = req.body;
             const result = await record.viewRank(year, month);
+            if (result.length === 0)    res.json({"id": 0, "totalTime": 0})
             res.json(result);
         } catch (err) {
             console.log("record: 월별 기록 조회 컨트롤러 오류")
+            res.json({ "result": "error" });
         }
     },
 
@@ -35,9 +41,11 @@ const recordController = {
         try {
             const {id, year, month} = req.body;
             const result = await record.viewMyRank(id, year, month);
-            res.json(result);
+            if (result === null)    res.json({"id": id, "totalTime": 0, "rank": 0})
+            else                    res.json(result);
         } catch (err) {
             console.log("record: 내 랭킹 조회 컨트롤러 오류")
+            res.json({ "result": "error" });
         }
     },
 

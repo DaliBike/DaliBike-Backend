@@ -15,18 +15,28 @@ const report = {
     },
     getReportDetails : async function(id) {
         try {
-            const [result] = await mysql.query("SELECT type, image FROM Store WHERE reportId = ?", [id]);
+            const [result] = await mysql.query("SELECT reportId, type, image FROM report WHERE reportId = ?", [id]);
             return result;
         } catch (error) {
             console.log("report: detail 조회 오류 발생");
+            console.log(error)
         }
     },
     getNearbyReportListOfUser : async function(userId, type, latitude, longitude) {
         try {
-            const [result] = await mysql.query("SELECT * FROM report WHERE userId = ? AND type = ? AND (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) < 0.020", [userId, type, latitude, longitude, latitude]);
+            const [result] = await mysql.query("SELECT * FROM report WHERE USERId = ? AND type = ? AND (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) < 0.020", [userId, type, latitude, longitude, latitude]);
             return result.length == 0;
         } catch (error) {
             console.log("report: getNearbyReportListOfUser 오류 발생");
+            throw error;
+        }
+    },
+    getNearbyReportRemovalListOfUser : async function (userId, reportId) {
+        try {
+            const [result] = await mysql.query("SELECT * FROM reportRemovalRequest WHERE USERId = ? AND reportId = ?", [userId, reportId]);
+            return result.length == 0;
+        } catch (error) {
+            console.log("report: getNearbyReportRemovalListOfUser 오류 발생");
             throw error;
         }
     },
@@ -49,12 +59,19 @@ const report = {
             throw error;
         }
     },
+    addReportRemoval : async function(userId, reportId, imagePath) {
+        try {
+            await mysql.query("INSERT INTO reportRemovalRequest (USERId, reportId, image, requestedDateTime) VALUES (?, ?, ?, NOW())", [userId, reportId, imagePath]);
+            console.log("report: addReportRemoval 완료")
+            return true;
+        } catch (error) {
+            console.log("report: addReportRemoval 오류 발생")
+            throw error;
+        }
+    },
     deleteImage: async function(imagePath) {
         try {
-            // 파일이 존재하는지 확인
-            await fs.access(imagePath);
-            // 파일이 존재할 경우 삭제
-            await fs.unlink(imagePath);
+            if (await fs.access(imagePath)) await fs.unlink(imagePath);
             console.log("report: deleteImage 완료");
             return true;
         } catch (error) {
@@ -74,7 +91,13 @@ const report = {
     },
     getManagerDeleteReportList : async function() {
         try {
-            const [result] = await mysql.execute("SELECT * FROM reportRemovalRequest ORDER BY requestedDateTime ASC");
+            const [result] = await mysql.execute(`
+                SELECT r.reportId, r.type, r.image AS reportImage, rrr.image AS removalRequestImage, rrr.requestedDateTime, rrr.USERId
+                FROM reportRemovalRequest rrr
+                JOIN report r ON rrr.reportId = r.reportId
+                ORDER BY rrr.requestedDateTime ASC
+            `);
+            console.log(result)
             return result;
         } catch (error) {
             console.log("report: getManagerDeleteReportList 오류 발생")
@@ -151,7 +174,7 @@ const report = {
     },
     getAutoApproveReportList : async function() {
         try {
-            const [reportList] = this.getManagerReportList();
+            const [reportList] = await this.getManagerReportList();
             console.log(reportList)
             // 각 제보에 대해 인근 제보가 5개 이상인 경우 자동 승인
             for (report of reportList) {
@@ -176,6 +199,16 @@ const report = {
             console.log("report: getAutoApproveReportList 오류 발생")
             throw error;
         }
+    },
+    registerReject : async function(reportId, type) {
+        const [userInfo] = await mysql.execute("SELECT image FROM report WHERE reportId = ?", [reportId]);
+            const imagePath = userInfo[0].image;
+            await mysql.execute("DELETE FROM report WHERE reportId = ? AND type = ? AND DispStatus = 0", [reportId, type]);
+            await this.deleteImage(imagePath);
+            console.log(`report: registerReject 완료 (${reportId}, ${type}, ${point})`);
+    },
+    removalApprove : async function(reportId, ) {
+
     }
 }
 
