@@ -48,15 +48,15 @@ const post = {
     },
 
     // 게시글 작성
-    insertPost: async function (category, title, content) {
+    insertPost: async function (userId, category, title, content) {
         try {
-            const [result] = await mysql.query(
-                "INSERT INTO Post (Category, Title, Tontent) VALUES (?,?,?)",
-                [category, title, content]
-            );
-            return result;
+            await mysql.query("INSERT INTO Post (Title, Content, Category, USERId) VALUES (?,?,?,?)", 
+                [title, content, category, userId]);
+            console.log(`category ${category}: 글 작성 완료`);
+            return true;
         } catch (err) {
-            console.log("post: 게시글 작성 모델 오류 발생");
+            console.log("post: 게시글 작성 모델 오류 발생" + error);
+            return false;
         }
     },
 

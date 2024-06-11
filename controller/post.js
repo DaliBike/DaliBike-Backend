@@ -56,13 +56,13 @@ const postController = {
     },
 
     InsertPost: async (req, res) => {
-        const {categoryId, title, content} = req.body;
+        const {userId, categoryId, title, content} = req.body;
         try {
-            const result = await post.insertPost(categoryId, title, content);
-            res.json(result);
+            await post.insertPost(userId, categoryId, title, content);
+            res.json({ result: 'true' });
         } catch (err) {
             console.log("post: 게시글 작성 컨트롤러 오류");
-            res.json({ "result": "error" });
+            res.json({result: 'false'});
         }
     },
 
