@@ -39,7 +39,7 @@
             margin: 2px;
         }
 
-        .selected {
+        .pendingList:hover {
             background-color: #5d683f;
         }
 
@@ -142,117 +142,183 @@
 <body>
     <div class="container">
         <h1>Manage Report List</h1>
-        <div style="text-align: center;">
-            <button class="pendingList selected" onclick="toggleList('reportList', this)">등록 대기 목록</button>
-            <button class="pendingList" onclick="toggleList('deleteReportList', this)">삭제 대기 목록</button>
-        </div>
-        <table id="reportTable">
-            <thead>
-                <tr>
-                    <th>Report ID</th>
-                    <th>Requested DateTime</th>
-                    <th>User ID</th>
-                    <th>Type</th>
-                    <th class="hide-on-small-screen">Latitude</th>
-                    <th class="hide-on-small-screen">Longitude</th>
-                    <th>Image</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="reportList">
-                <% if (reportList.length === 0) { %>
-                    <tr>
-                        <td colspan="8">데이터 없음</td>
-                    </tr>
-                <% } else { %>
-                    <% reportList.forEach(report => { %>
-                        <tr>
-                            <td data-th="Report ID"><%= report.reportId %></td>
-                            <td data-th="Requested DateTime"><%= report.requestedDateTime %></td>
-                            <td data-th="User ID"><%= report.USERId %></td>
-                            <td data-th="Type"><%= report.type === 0 ? '포트홀' : '공사현장' %></td>
-                            <td class="hide-on-small-screen" data-th="Latitude"><%= report.Latitude %></td>
-                            <td class="hide-on-small-screen" data-th="Longitude"><%= report.Longitude %></td>
-                            <td data-th="Image">
-                                <button class="action-button" onclick="toggleImage(this, '<%= report.image %>')">사진 보기</button>
-                            </td>
-                            <td data-th="Actions">
-                                <button class="action-button approve-button" onclick="handleAction(<%= report.reportId %>, <%=report.type %>, 'approve')">승인</button>
-                                <button class="action-button reject-button" onclick="handleAction(<%= report.reportId %>, <%=report.type %>, 'reject')">거절</button>
-                            </td>
-                        </tr>
-                        <tr class="image-row" style="display: none;">
-                            <td colspan="8">
-                                <img src="..\<%= report.image %>" alt="Report Image" class="large-image">
-                            </td>
-                        </tr>
-                    <% }); %>
-                <% } %>
-            </tbody>
-            <tbody id="deleteReportList" style="display: none;">
-                <% if (deleteReportList.length === 0) { %>
-                    <tr>
-                        <td colspan="8">데이터 없음</td>
-                    </tr>
-                <% } else { %>
-                    <% deleteReportList.forEach(report => { %>
-                        <tr>
-                            <td data-th="Report ID"><%= report.reportId %></td>
-                            <td data-th="User ID"><%= report.USERId %></td>
-                            <td data-th="Type"><%= report.type === 0 ? '포트홀' : '공사현장' %></td>
-                            <td class="hide-on-small-screen" data-th="Latitude"><%= report.Latitude %></td>
-                            <td class="hide-on-small-screen" data-th="Longitude"><%= report.Longitude %></td>
-                            <td data-th="Image">
-                                <button class="action-button" onclick="toggleImage(this, '<%= report.image %>')">사진 보기</button>
-                            </td>
-                            <td data-th="Actions">
-                                <button class="action-button approve-button" onclick="handleAction(<%= report.reportId %>, <%= report.type %>, 'approve')">승인</button>
-                                <button class="action-button reject-button" onclick="handleAction(<%= report.reportId %>, <%= report.type %>, 'reject')">거절</button>
-                            </td>
-                        </tr>
-                        <tr class="image-row" style="display: none;">
-                            <td colspan="8">
-                                <img src="..\<%= report.image %>" alt="Report Image" class="large-image">
-                            </td>
-                        </tr>
-                    <% }); %>
-                <% } %>
-            </tbody>
-        </table>
+                <!-- 등록 대기 목록 테이블 -->
+                <div id="reportListContainer">
+                    <div style="text-align: center;">
+                        <button class="pendingList selected" onclick="toggleList('reportListContainer', this)">등록 대기 목록</button>
+                        <button class="pendingList" onclick="toggleList('deleteReportListContainer', this)">삭제 대기 목록</button>
+                    </div>
+                    <table id="reportTable">
+                        <thead>
+                            <tr>
+                                <th>Report ID</th>
+                                <th>Requested DateTime</th>
+                                <th>User ID</th>
+                                <th>Type</th>
+                                <th>Latitude</th>
+                                <th>Longitude</th>
+                                <th>Image</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportList">
+                            <% if (reportList.length === 0) { %>
+                                <tr>
+                                    <td colspan="8">데이터 없음</td>
+                                </tr>
+                            <% } else { %>
+                                <% reportList.forEach(report => { %>
+                                    <tr>
+                                        <td data-th="Report ID"><%= report.reportId %></td>
+                                        <td data-th="Requested DateTime"><%= report.requestedDateTime %></td>
+                                        <td data-th="User ID"><%= report.USERId %></td>
+                                        <td data-th="Type"><%= report.type === 0 ? '포트홀' : '공사현장' %></td>
+                                        <td data-th="Latitude" class="hide-on-small-screen"><%= report.Latitude %></td>
+                                        <td data-th="Longitude" class="hide-on-small-screen"><%= report.Longitude %></td>
+                                        <td data-th="Image">
+                                            <button class="action-button" onclick="toggleImage_register(this, '<%= report.image %>')">사진 보기</button>
+                                        </td>
+                                        <td data-th="Actions">
+                                            <button class="action-button approve-button" onclick="handleAction(<%= report.reportId %>, <%= report.type %>, 'registerApprove')">승인</button>
+                                            <button class="action-button reject-button" onclick="handleAction(<%= report.reportId %>, <%= report.type %>, 'registerReject')">거절</button>
+                                        </td>
+                                    </tr>
+                                    <tr class="image-row1" style="display: none;">
+                                        <td colspan="8">
+                                            <img src="..\<%= report.image %>" alt="Report Image" class="large-image">
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+
+<!-- 삭제 대기 목록 테이블 -->
+<div id="deleteReportListContainer" style="display: none;">
+    <div style="text-align: center;">
+        <button class="pendingList selected" onclick="toggleList('reportListContainer', this)">등록 대기 목록</button>
+        <button class="pendingList" onclick="toggleList('deleteReportListContainer', this)">삭제 대기 목록</button>
     </div>
+    <table id="deleteReportTable">
+        <thead>
+            <tr>
+                <th>Report ID</th>
+                <th>Requested DateTime</th>
+                <th>User ID</th>
+                <th>Type</th>
+                <th>Report Image</th>
+                <th>Removal Request Image</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="deleteReportList">
+            <% if (deleteReportList.length === 0) { %>
+                <tr>
+                    <td colspan="7">데이터 없음</td>
+                </tr>
+            <% } else { %>
+                <% deleteReportList.forEach(report => { %>
+                    <tr>
+                        <td data-th="Report ID"><%= report.reportId %></td>
+                        <td data-th="Requested DateTime"><%= report.requestedDateTime %></td>
+                        <td data-th="User ID"><%= report.USERId %></td>
+                        <td data-th="Type"><%= report.type === 0 ? '포트홀' : '공사현장' %></td>
+                        <td data-th="Report Image">
+                            <button class="action-button" onclick="toggleImage_register(this, '<%= report.reportImage %>')">사진 보기</button>
+                        </td>
+                        <td data-th="Removal Request Image">
+                            <button class="action-button" onclick="toggleImage_delete(this, '<%= report.removalRequestImage %>')">사진 보기</button>
+                        </td>
+                        <td data-th="Actions">
+                            <button class="action-button approve-button" onclick="handleAction(<%= report.reportId %>, <%= report.type %>, 'removalApprove')">승인</button>
+                            <button class="action-button reject-button" onclick="handleAction(<%= report.reportId %>, <%= report.type %>, 'removalReject')">거절</button>
+                        </td>
+                    </tr>
+                    <tr class="image-row1" style="display: none;">
+                        <td colspan="7">
+                            <img src="..\<%= report.reportImage %>" alt="Report Image" class="large-image">
+                        </td>
+                    </tr>
+                    <tr class="image-row2" style="display: none;">
+                        <td colspan="7">
+                            <img src="..\<%= report.removalRequestImage %>" alt="Removal Request Image" class="large-image">
+                        </td>
+                    </tr>
+                <% }); %>
+            <% } %>
+        </tbody>
+    </table>
+</div>
+</div>
 
-    <script>
-        function toggleImage(button, imagePath) {
-            const currentRow = button.closest('tr');
-            const imageRow = currentRow.nextElementSibling;
+<script>
+function toggleList(containerId, button) {
+    // 모든 컨테이너를 숨깁니다.
+    const containers = document.querySelectorAll('.container > div');
+    containers.forEach(container => container.style.display = 'none');
+    
+    // 선택된 버튼에만 'selected' 클래스를 추가합니다.
+    const buttons = document.querySelectorAll('.pendingList');
+    buttons.forEach(btn => btn.classList.remove('selected')); // 모든 버튼에서 'selected' 클래스를 제거합니다.
+    button.classList.add('selected'); // 클릭된 버튼에 'selected' 클래스를 추가합니다.
+    
+    // 해당하는 컨테이너를 표시합니다.
+    document.getElementById(containerId).style.display = 'block';
+}
 
-            if (imageRow.style.display === 'none') {
-                imageRow.style.display = 'table-row';
-                button.textContent = '사진 숨기기';
-            } else {
-                imageRow.style.display = 'none';
-                button.textContent = '사진 보기';
-            }
-        }
 
-        function toggleList(listId, button) {
-            const reportList = document.getElementById('reportList');
-            const deleteReportList = document.getElementById('deleteReportList');
-            const buttons = document.querySelectorAll('.pendingList');
+function toggleImage_register(button, imageUrl) {
+    const row = button.closest('tr');
+    const nextRow = row.nextElementSibling;
 
-            buttons.forEach(btn => btn.classList.remove('selected'));
-            button.classList.add('selected');
+    if (nextRow && nextRow.classList.contains('image-row1')) {
+        // 이미지 행이 존재하면 해당 행을 토글
+        nextRow.style.display = nextRow.style.display === 'none' ? 'table-row' : 'none';
+    } else {
+        // 이미지 행이 없으면 새로운 행 생성
+        const newRow = document.createElement('tr');
+        newRow.classList.add('image-row1');
+        const newCell = document.createElement('td');
+        newCell.colSpan = row.cells.length;
+        const img = document.createElement('img');
+        img.src = imageUrl;
+        img.alt = 'Report Image';
+        img.classList.add('large-image');
+        newCell.appendChild(img);
+        newRow.appendChild(newCell);
+        row.parentNode.insertBefore(newRow, nextRow); // 다음 행이 아닌 그냥 다음에 삽입
+    }
+    button.textContent = nextRow.style.display === 'none' ? '사진 보기' : '사진 숨기기';
+}
 
-            if (listId === 'reportList') {
-                reportList.style.display = 'table-row-group';
-                deleteReportList.style.display = 'none';
-            } else {
-                reportList.style.display = 'none';
-                deleteReportList.style.display = 'table-row-group';
-            }
-        }
+function toggleImage_delete(button, imageUrl) {
+    const row = button.closest('tr').nextElementSibling;
+    const nextRow = row.nextElementSibling;
 
-        async function handleAction(reportId, type, action) {
+    if (nextRow && nextRow.classList.contains('image-row2')) {
+        // 이미지 행이 존재하면 해당 행을 토글
+        nextRow.style.display = nextRow.style.display === 'none' ? 'table-row' : 'none';
+    } else {
+        // 이미지 행이 없으면 새로운 행 생성
+        const newRow = document.createElement('tr');
+        newRow.classList.add('image-row2');
+        const newCell = document.createElement('td');
+        newCell.colSpan = row.cells.length;
+        const img = document.createElement('img');
+        img.src = imageUrl;
+        img.alt = 'Report Removal Image';
+        img.classList.add('large-image');
+        newCell.appendChild(img);
+        newRow.appendChild(newCell);
+        row.parentNode.insertBefore(newRow, nextRow); // 다음 행이 아닌 그냥 다음에 삽입
+    }
+
+    // 버튼 텍스트 변경
+    button.textContent = nextRow.style.display === 'none' ? '사진 보기' : '사진 숨기기';
+}
+
+async function handleAction(reportId, type, action) {
             try {
                 console.log(reportId, type, action)
                 console.log(`manager/report/${action}`)

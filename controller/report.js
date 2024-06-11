@@ -33,7 +33,7 @@ const reportController = {
     },
     addReportRemoval : async function(req, res) {
         try {
-            const {reportId, userId, image} = req.body;
+            const {reportId, userId} = req.body;
             console.log(req.file)
             const isAvailable = await report.getNearbyReportRemovalListOfUser(userId, reportId);
             if (isAvailable) {

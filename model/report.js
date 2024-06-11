@@ -71,10 +71,7 @@ const report = {
     },
     deleteImage: async function(imagePath) {
         try {
-            // 파일이 존재하는지 확인
-            await fs.access(imagePath);
-            // 파일이 존재할 경우 삭제
-            await fs.unlink(imagePath);
+            if (await fs.access(imagePath)) await fs.unlink(imagePath);
             console.log("report: deleteImage 완료");
             return true;
         } catch (error) {
@@ -100,7 +97,7 @@ const report = {
                 JOIN report r ON rrr.reportId = r.reportId
                 ORDER BY rrr.requestedDateTime ASC
             `);
-            
+            console.log(result)
             return result;
         } catch (error) {
             console.log("report: getManagerDeleteReportList 오류 발생")
@@ -177,7 +174,7 @@ const report = {
     },
     getAutoApproveReportList : async function() {
         try {
-            const [reportList] = this.getManagerReportList();
+            const [reportList] = await this.getManagerReportList();
             console.log(reportList)
             // 각 제보에 대해 인근 제보가 5개 이상인 경우 자동 승인
             for (report of reportList) {
