@@ -66,7 +66,7 @@ const userController = {
         try {
             const {id} = req.body;
             const result = await user.mainPage(id);
-            if (result[0].dailyTime === null)   res.json({"nickname": result[0].Nickname, "dailyTime": 0, "totalTime": result[0].totalTime})
+            if (result[0].dailyTime === null)   res.json([{"Nickname": result[0].Nickname, "dailyTime": 0, "totalTime": result[0].totalTime}])
             else                            res.json(result);
         } catch (error) {
             console.log("user: mainPage 컨트롤러 오류 발생 " + error);
