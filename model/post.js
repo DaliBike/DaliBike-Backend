@@ -16,12 +16,9 @@ const post = {
 
 
     // 카테고리별 게시글 조회
-    viewCategoryPost: async function (category) {
+    viewCategoryPost: async function (catergory) {
         try {
-            const [result] = await mysql.query(
-                "SELECT p.Title, p.Content, p.Like, u.Nickname FROM Post p JOIN USER u ON p.USERId = u.USERId WHERE Category =?",
-                [category]
-            );
+            const [result] = await mysql.query("SELECT p.Title, p.Content, p.Like, u.Nickname FROM Post p JOIN USER u ON p.USERId = u.USERId WHERE p.Category =?", [catergory]);
             return result;
         } catch (err) {
             console.log("post: 카테고리별 조회 모델 오류 발생");
@@ -86,7 +83,7 @@ const post = {
     //인기 게시물 조회
     viewHotPosts: async function () {
         try {
-            const [result] = await mysql.query("SELECT * FROM `Post` ORDER BY `Like` DESC LIMIT 6;");
+            const [result] = await mysql.query("SELECT Title, `Like` FROM `Post` ORDER BY `Like` DESC LIMIT 6;");
             return result;
         } catch (err) {
             console.log("post: 인기 게시글 조회 모델 오류 발생");

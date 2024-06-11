@@ -12,7 +12,7 @@ const postController = {
     },
 
     ViewCategoryPost: async (req, res) => {
-        const category = req.body;
+        const category = req.params.category;
         try {
             const result = await post.viewCategoryPost(category);
             res.json(result);
@@ -32,7 +32,7 @@ const postController = {
     },
 
     SelectPost: async (req, res) => {
-        const postId = req.body;
+        const postId = req.params.postId;
         try {
             const result = await post.selectPost(postId);
             const result2 = await comment.getComment(postId);
@@ -62,7 +62,7 @@ const postController = {
     },
 
     DeletePost: async (req, res) => {
-        const {postId} = req.body;
+        const postId = req.params.postId;
         try {
             const result = await post.deletePost(postId);
             res.json(result);
@@ -89,6 +89,7 @@ const postController = {
             console.log("post: 게시글 좋아요 컨트롤러 오류");
         }
     }
+
     
 }
 
