@@ -10,7 +10,9 @@ router.get("/", (req, res) => {
 router.post("/login", userController.managerLogin);
 router.get("/report/list", reportController.getManagerReportList);
 router.get("/public/reportImages/:image", reportController.getManagerReportImage);
-router.post("/report/approve", reportController.registerApprove);
-router.post("/report/reject", reportController.registerReject);
+router.post("/report/registerApprove", reportController.registerApprove);
+router.post("/report/registerReject", reportController.registerReject);
+router.post("/report/removalApprove", reportController.removalApprove);
+router.post("/report/removalReject", reportController.removalReject);
 
 module.exports = router;
