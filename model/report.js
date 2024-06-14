@@ -51,7 +51,7 @@ const report = {
     },
     getNearbyApprovedReport : async function(type, latitude, longitude) {
         try {
-            const [result] = await mysql.query("SELECT * FROM report WHERE tpye = ? AND DispStatus = 1 AND (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) < 0.020", [type, latitude, longitude, latitude]);
+            const [result] = await mysql.query("SELECT * FROM report WHERE type = ? AND DispStatus = 1 AND (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) < 0.020", [type, latitude, longitude, latitude]);
             return result.length == 0;
         } catch (error) {
             console.log("report: getNearbyApprovedReport 오류 발생");
