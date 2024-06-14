@@ -10,6 +10,7 @@ const record = {
             return result;
         } catch (error) {
             console.log("record: 오늘 기록 조회 오류 발생" + error);
+            throw error;
         }
     },    
     viewMonthly: async function (id, year, month) {
@@ -22,6 +23,7 @@ const record = {
             return result;
         } catch (error) {
             console.log("record: 월별 기록 조회 오류 발생");
+            throw error;
         }
     },
 

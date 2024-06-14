@@ -2,9 +2,6 @@ const express = require('express')
 const path = require('path')
 const app = express()
 const port = 3000
-const schedule = require('node-schedule');
-const reportController = require("./controller/report");
-
 app.use(express.json());
 
 const userRouter = require("./routers/user");
@@ -13,11 +10,6 @@ const mapRouter = require("./routers/map")
 const postRouter = require("./routers/post");
 const reportRouter = require("./routers/report");
 const managerRouter = require("./routers/manager");
-
-//schedule.scheduleJob('* * * * * *', async function() {reportController.registerAutoApprove();});
-//schedule.scheduleJob('* * * * * *', async function() {reportController.registerAutoReject;});
-//schedule.scheduleJob('* * * * * *', async function() {reportController.removalAutoApprove();});
-//schedule.scheduleJob('* * * * * *', async function() {reportController.removalAutoReject();});
 
 app.use(express.static('/'));
 app.use("/user", userRouter);
