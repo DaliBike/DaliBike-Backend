@@ -43,7 +43,7 @@ const test = multer(
     }
 );
 
-schedule.scheduleJob('* * * * * *', async function() {reportController.registerAutoApprove();});
+//schedule.scheduleJob('* * * * * *', async function() {reportController.registerAutoApprove();});
 //schedule.scheduleJob('* * * * * *', async function() {reportController.registerAutoReject();});
 //schedule.scheduleJob('* * * * * *', async function() {reportController.removalAutoApprove();});
 //schedule.scheduleJob('* * * * * *', async function() {reportController.removalAutoReject();});
