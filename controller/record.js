@@ -29,7 +29,7 @@ const recordController = {
         try {
             const {year, month} = req.body;
             const result = await record.viewRank(year, month);
-            if (result.length === 0)    res.json({"id": 0, "totalTime": 0});
+            if (result.length === 0)    res.json({"Nickname": 0, "totalTime": 0});
             else                        res.json(result);
         } catch (err) {
             console.log("record: 월별 기록 조회 컨트롤러 오류")
@@ -41,7 +41,7 @@ const recordController = {
         try {
             const {id, year, month} = req.body;
             const result = await record.viewMyRank(id, year, month);
-            if (result === null)    res.json({"id": id, "totalTime": 0, "rank": 0})
+            if (result === null)    res.json({"Nickname": id, "totalTime": 0, "rank": 0})
             else                    res.json(result);
         } catch (err) {
             console.log("record: 내 랭킹 조회 컨트롤러 오류")
