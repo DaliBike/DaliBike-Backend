@@ -51,7 +51,7 @@ const report = {
     },
     getNearbyApprovedReport : async function(type, latitude, longitude) {
         try {
-            const [result] = await mysql.query("SELECT * FROM report WHERE tpye = ? AND DispStatus = 1 AND (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) < 0.020", [type, latitude, longitude, latitude]);
+            const [result] = await mysql.query("SELECT * FROM report WHERE type = ? AND DispStatus = 1 AND (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) < 0.020", [type, latitude, longitude, latitude]);
             return result.length == 0;
         } catch (error) {
             console.log("report: getNearbyApprovedReport 오류 발생");
@@ -180,22 +180,33 @@ const report = {
             throw error;
         }
     },
-    getAutoApproveReportList : async function() {
+    registerAutoApprove: async function() {
         try {
-            const [reportList] = await this.getManagerReportList();
+            const reportList = await this.getManagerReportList();
+            console.log(reportList)
+    
             // 각 제보에 대해 인근 제보가 5개 이상인 경우 자동 승인
-            for (report of reportList) {
+            for (const report of reportList) {
                 const reportId = report.reportId;
                 const type = report.type;
-                console.log("현재 report >>> " + reportId + " " + type)
-                const [nearbySameReports] = this.getNumOfNearbySameReports(reportId, type);
-                if (nearbySameReports) {
+                console.log(`현재 report >>> ${reportId}번, ${type == 0 ? "포트홀" : "공사현장"}`);
+    
+                // 해당 제보에 대해 인근 동일 제보의 개수를 가져옵니다.
+                const [nearbySameReports] = await this.getNumOfNearbySameReports(reportId, type);
+    
+                if (nearbySameReports != null) {
                     const numberOfReports = nearbySameReports.count;
+    
+                    // 인근 동일 제보가 5개 이상인 경우에만 자동 승인 절차를 진행합니다.
                     if (numberOfReports >= 5) {
+                        // 해당 제보를 자동으로 승인 처리합니다.
                         await this.registerApprove(reportId, type, 100 / numberOfReports);
-                        const [restNearbySameReports] = this.getNearbySameReports(reportId, type);
-                        console.log(restNearbySameReports)
-                        for (restReport of restNearbySameReports) {
+    
+                        // 인근 동일 제보들에 대해서도 자동 승인 처리를 반복합니다.
+                        const [restNearbySameReports] = await this.getNearbySameReports(reportId, type);
+                        console.log(restNearbySameReports);
+    
+                        for (const restReport of restNearbySameReports) {
                             await this.registerNearbyApprove(restReport.reportId, type, 100 / numberOfReports);
                         }
                     }
@@ -203,10 +214,10 @@ const report = {
             }
             return true;
         } catch (error) {
-            console.log("report: getAutoApproveReportList 오류 발생")
+            console.log("registerAutoApprove 오류 발생:", error.message);
             throw error;
         }
-    },
+    },    
     registerReject : async function(reportId, type) {
         try {
             const [info] = await mysql.execute("SELECT image FROM report WHERE reportId = ?", [reportId]);
@@ -277,9 +288,85 @@ const report = {
             throw error;
         }
     },
+    registerAutoReject : async function() {
+        // 5일 이상 지난 제보승인요청 자동 거절
+        try {
+            const [result] = await mysql.execute("SELECT reportId, type, image, USERId, requestedDateTime FROM report WHERE DATE_ADD(requestedDateTime, INTERVAL 5 DAY) < NOW() AND DispStatus = 0");
+            for (const report of result) {
+                const reportId = report.reportId;
+                const type = report.type;
+                await this.registerReject(reportId, type);
+            }
+            console.log(`report: registerAutoReject 완료 : ${result.length}개의 제보 승인요청이 자동 거절되었습니다.`)
+            return true;
+        } catch (error) {
+            console.log("report: registerAutoReject 오류" + error)
+            throw error;
+        }
+    },
     removalAutoReject : async function() {
         // 5일 이상 지난 제보삭제요청 자동 거절
-    }
+        try {
+            const [result] = await mysql.execute("SELECT reportId, USERId, requestedDateTime FROM reportRemovalRequest WHERE DATE_ADD(requestedDateTime, INTERVAL 5 DAY) < NOW()");
+            for (const removalRequest of result) {
+                const reportId = removalRequest.reportId;
+                const userId = removalRequest.USERId;
+                await this.removalReject(reportId, userId);
+            }
+            console.log(`report: removalAutoReject 완료 : ${result.length}개의 제보 삭제요청이 자동 거절되었습니다.`)
+            return true;
+        } catch (error) {
+            console.log("report: removalAutoReject 오류" + error)
+            throw error;
+        }
+    },
+    removalAutoApprove: async function() {
+        try {
+            // 제보 삭제 요청 목록을 가져옵니다.
+            const removalRequests = await this.getManagerDeleteReportList();
+    
+            // 각 삭제 요청에 대해 처리합니다.
+            for (const request of removalRequests) {
+                const reportId = request.reportId;
+                const userId = request.USERId;
+                const type = request.type;
+                
+                const [exists] = await mysql.query("SELECT * AS count FROM report WHERE reportId = ? AND USERId = ?", [reportId, userId]);
+
+                if (exists.length !== 0) {
+                    // 해당 제보에 대해 인근 동일 삭제 요청의 개수를 가져옵니다.
+                    const [nearbySameRemovalRequests] = await mysql.query(
+                        "SELECT COUNT(*) as count FROM reportRemovalRequest WHERE reportId = ? AND USERId != ?",
+                        [reportId, userId]
+                    );
+    
+                    if (nearbySameRemovalRequests) {
+                        const numberOfRequests = nearbySameRemovalRequests[0].count;
+                        
+                        // 인근 동일 삭제 요청이 5개 이상인 경우에만 자동 승인 절차를 진행합니다.
+                        if (numberOfRequests >= 5) {
+                            // 해당 제보 삭제 요청을 자동으로 승인 처리합니다.
+                            await this.removalApprove(reportId, userId);
+                            
+                            // 인근 동일 삭제 요청들에 대해서도 자동 승인 처리를 반복합니다.
+                            const [restNearbySameRemovalRequests] = await mysql.query(
+                                "SELECT USERId FROM reportRemovalRequest WHERE reportId = ? AND USERId != ?",
+                                [reportId, userId]
+                            );
+    
+                            for (const restRequest of restNearbySameRemovalRequests) {
+                                await this.removalApprove(reportId, restRequest.USERId);
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
+        } catch (error) {
+            console.log("report: removalAutoApprove 오류 발생:", error.message);
+            throw error;
+        }
+    },    
 }
 
 module.exports = report;

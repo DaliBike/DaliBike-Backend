@@ -10,6 +10,7 @@ const record = {
             return result;
         } catch (error) {
             console.log("record: 오늘 기록 조회 오류 발생" + error);
+            throw error;
         }
     },    
     viewMonthly: async function (id, year, month) {
@@ -22,29 +23,44 @@ const record = {
             return result;
         } catch (error) {
             console.log("record: 월별 기록 조회 오류 발생");
+            throw error;
         }
     },
 
     viewRank: async function (year, month) {
         try {
             const [result] = await mysql.query(
-                "SELECT USERId, SUM(dailyTime) AS totalTime FROM record WHERE date BETWEEN ? AND ? GROUP BY USERId ORDER BY totalTime DESC LIMIT 3",
+                    `SELECT u.Nickname, r.totalTime
+                FROM (
+                    SELECT USERId, SUM(dailyTime) AS totalTime
+                    FROM record
+                    WHERE date BETWEEN ? AND ?
+                    GROUP BY USERId
+                    ORDER BY totalTime DESC
+                    LIMIT 3
+                ) r
+                JOIN USER u ON r.USERId = u.USERId;`,
                 [`${year}-${month}-01`, `${year}-${month}-31`]
             );
             return result;
         } catch (error) {
             console.log("record: 기록 랭킹 조회 오류 발생");
+            throw error;
         }
     },
 
     viewMyRank: async function (id, year, month) {
         try {
             const [result] = await mysql.query(
-                `SELECT USERId, SUM(dailyTime) AS totalTime, 
-                        RANK() OVER (ORDER BY SUM(dailyTime) DESC) as rank 
-                FROM record 
-                WHERE date BETWEEN ? AND ? 
-                GROUP BY USERId`,
+                `SELECT u.Nickname, r.totalTime, r.rank
+                FROM (
+                    SELECT USERId, SUM(dailyTime) AS totalTime,
+                    RANK() OVER (ORDER BY SUM(dailyTime) DESC) as rank
+                    FROM record
+                    WHERE date BETWEEN ? AND ?
+                    GROUP BY USERId
+                ) r
+                JOIN USER u ON r.USERId = u.USERId;`,
                 [`${year}-${month}-01`, `${year}-${month}-31`]
             );
             const userRecord = result.find(record => record.USERId === id);
