@@ -154,14 +154,35 @@ const reportController = {
     },
     registerAutoApprove : async function(req, res) {
         try {
-            const isRefreshed = await report.getAutoApproveReportList();
-            console.log("report 자동 승인 새로고침 여부 : " + isRefreshed)
+            const isRefreshed = await report.registerAutoApprove();
+            console.log("report 자동 등록 승인 새로고침 여부 : " + isRefreshed)
         } catch (error) {
             console.error("report: registerAutoApprove controller 오류 발생" + error);
         }
     },
     registerAutoReject : async function(req, res) {
-
+        try {
+            const isRefreshed = await report.registerAutoReject();
+            console.log("report 자동 등록 거절 새로고침 여부 : " + isRefreshed)
+        } catch (error) {
+            console.error("report: registerAutoReject controller 오류 발생" + error);
+        }
+    },
+    removalAutoApprove : async function(req, res) {
+        try {
+            const isRefreshed = await report.removalAutoApprove();
+            console.log("report 자동 삭제 승인 새로고침 여부 : " + isRefreshed)
+        } catch (error) {
+            console.error("report: removalAutoApprove controller 오류 발생" + error);
+        }
+    },
+    removalAutoReject : async function(req, res) {
+        try {
+            const isRefreshed = await report.removalAutoReject();
+            console.log("report 자동 삭제 거절 새로고침 여부 : " + isRefreshed)
+        } catch (error) {
+            console.error("report: removalAutoReject controller 오류 발생" + error);
+        }
     },
     uploadImage : async function(req, res) {
         try {
