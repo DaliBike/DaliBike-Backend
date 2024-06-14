@@ -34,6 +34,7 @@ const record = {
             return result;
         } catch (error) {
             console.log("record: 기록 랭킹 조회 오류 발생");
+            throw error;
         }
     },
 
