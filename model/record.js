@@ -28,7 +28,16 @@ const record = {
     viewRank: async function (year, month) {
         try {
             const [result] = await mysql.query(
-                "SELECT USERId, SUM(dailyTime) AS totalTime FROM record WHERE date BETWEEN ? AND ? GROUP BY USERId ORDER BY totalTime DESC LIMIT 3",
+                    `SELECT u.Nickname, r.totalTime
+                FROM (
+                    SELECT USERId, SUM(dailyTime) AS totalTime
+                    FROM record
+                    WHERE date BETWEEN ? AND ?
+                    GROUP BY USERId
+                    ORDER BY totalTime DESC
+                    LIMIT 3
+                ) r
+                JOIN USER u ON r.USERId = u.USERId;`,
                 [`${year}-${month}-01`, `${year}-${month}-31`]
             );
             return result;
@@ -41,11 +50,15 @@ const record = {
     viewMyRank: async function (id, year, month) {
         try {
             const [result] = await mysql.query(
-                `SELECT USERId, SUM(dailyTime) AS totalTime, 
-                        RANK() OVER (ORDER BY SUM(dailyTime) DESC) as rank 
-                FROM record 
-                WHERE date BETWEEN ? AND ? 
-                GROUP BY USERId`,
+                `SELECT u.Nickname, r.totalTime, r.rank
+                FROM (
+                    SELECT USERId, SUM(dailyTime) AS totalTime,
+                    RANK() OVER (ORDER BY SUM(dailyTime) DESC) as rank
+                    FROM record
+                    WHERE date BETWEEN ? AND ?
+                    GROUP BY USERId
+                ) r
+                JOIN USER u ON r.USERId = u.USERId;`,
                 [`${year}-${month}-01`, `${year}-${month}-31`]
             );
             const userRecord = result.find(record => record.USERId === id);
