@@ -15,6 +15,10 @@ const reportRouter = require("./routers/report");
 const managerRouter = require("./routers/manager");
 
 //schedule.scheduleJob('* * * * * *', async function() {reportController.registerAutoApprove();});
+//schedule.scheduleJob('* * * * * *', async function() {reportController.registerAutoReject;});
+//schedule.scheduleJob('* * * * * *', async function() {reportController.removalAutoApprove();});
+//schedule.scheduleJob('* * * * * *', async function() {reportController.removalAutoReject();});
+
 app.use(express.static('/'));
 app.use("/user", userRouter);
 app.use("/record", recordRouter);

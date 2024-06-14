@@ -29,8 +29,8 @@ const recordController = {
         try {
             const {year, month} = req.body;
             const result = await record.viewRank(year, month);
-            if (result.length === 0)    res.json({"id": 0, "totalTime": 0})
-            res.json(result);
+            if (result.length === 0)    res.json({"id": 0, "totalTime": 0});
+            else                        res.json(result);
         } catch (err) {
             console.log("record: 월별 기록 조회 컨트롤러 오류")
             res.json({ "result": "error" });
