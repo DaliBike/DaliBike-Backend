@@ -17,7 +17,7 @@ const recordController = {
         try {
             const {id, year, month} = req.body;
             const result = await record.viewMonthly(id, year, month);
-            if (result.length === 0)   res.json({"id": id, "dailyTime": 0}) // 월간 기록이 아예 없는 경우 이거만 던짐
+            if (result.length === 0)   res.json([{"id": id, "dailyTime": 0}]) // 월간 기록이 아예 없는 경우 이거만 던짐
             else                        res.json(result);
         } catch (err) {
             console.log("record: 월별 기록 조회 컨트롤러 오류")
