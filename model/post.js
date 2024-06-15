@@ -18,7 +18,7 @@ const post = {
     // 카테고리별 게시글 조회
     viewCategoryPost: async function (catergory) {
         try {
-            const [result] = await mysql.query("SELECT p.Title, p.Content, p.Like, (SELECT COUNT(c.CommentId) FROM Comment c WHERE c.PostId = p.PostId) AS CommentCount FROM Post p WHERE p.Category = ? ORDER BY p.PostId DESC", [catergory]);
+            const [result] = await mysql.query("SELECT p.PostId, p.Title, p.Content, p.Like, (SELECT COUNT(c.CommentId) FROM Comment c WHERE c.PostId = p.PostId) AS CommentCount FROM Post p WHERE p.Category = ? ORDER BY p.PostId DESC", [catergory]);
             return result;
         } catch (err) {
             console.log("post: 카테고리별 조회 모델 오류 발생");
@@ -73,7 +73,7 @@ const post = {
     //게시글 좋아요
     likePost: async function (postId) {
         try {
-            const [result] = await mysql.query("SELECT * FROM Post WHERE PostId =?", [postId]);
+            const [result] = await mysql.query("UPDATE `Post`SET `Like` = `Like` + 1 WHERE `PostId` = ?;", [postId]);
             return result;
         } catch (err) {
             console.log("post: 게시글 좋아요 모델 오류 발생");
@@ -87,6 +87,15 @@ const post = {
             return result;
         } catch (err) {
             console.log("post: 인기 게시글 조회 모델 오류 발생");
+        }
+    },
+    getLikeComment: async function(postId) {
+        try {
+            const [result] = await mysql.query("UPDATE `Post` SET `Like` = `Like` + 1 WHERE `PostId` = ?;", [postId]);
+            return result;
+        } catch (err) {
+            console.log("post: 인기 게시글 조회 모델 오류 발생", err);
+            throw err; // 오류를 던져서 컨트롤러에서 캐치할 수 있게 함
         }
     }
 
