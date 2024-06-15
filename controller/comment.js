@@ -15,7 +15,7 @@ const commentController = {
 
     //댓글 삭제
     DeleteComment: async (req, res) => {
-        const postId = req.body;
+        const {postId} = req.body;
         try {
             const result = await comment.deleteComment(id);
             if (result)     res.json({ "result": "success" });
@@ -27,7 +27,7 @@ const commentController = {
     },
 
     GetComment: async (req, res) => {
-        const postId = req.body;
+        const {postId} = req.body;
         console.log("getComment postId: " + postId)
         try {
             const result = await comment.getComment(postId);
