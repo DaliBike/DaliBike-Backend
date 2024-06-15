@@ -1,17 +1,16 @@
 "use strict";
 
-const {WriteComment} = require('../controller/comment.js');
 const mysql = require('./config.js');
 
 const comment = {
     //댓글
-    writeComment: async function (postId, comment) {
+    writeComment: async function (postId, userId, comment) {
         try {
-            const [result] = await mysql.query(
-                "INSERT INTO Comment (PostId, Comment) VALUES (?,?)",
-                [postId, comment]
+            await mysql.query(
+                "INSERT INTO Comment (PostId, USERId, Comment) VALUES (?,?,?)",
+                [postId, userId, comment]
             );
-            return result;
+            return true;
         } catch (err) {
             console.log("post: 댓글 작성 모델 오류 발생");
         }
@@ -32,12 +31,12 @@ const comment = {
     getComment: async function (postId) {
         try {
             const [result] = await mysql.query(
-                "SELECT * FROM Comment WHERE PostId =?",
+                "SELECT u.Nickname, c.Comment FROM Comment AS c JOIN USER AS u ON c.USERId = u.USERId WHERE c.PostId = ?",
                 [postId]
             );
             return result;
         } catch (err) {
-            console.log("post: 댓글 조회 모델 오류 발생");
+            console.log("post: 댓글 조회 모델 오류 발생 " + err);
         }
     }
 
