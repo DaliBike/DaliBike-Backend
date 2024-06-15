@@ -30,7 +30,7 @@ const record = {
     viewRank: async function (year, month) {
         try {
             const [result] = await mysql.query(
-                    `SELECT u.Nickname, r.totalTime
+                `SELECT u.Nickname, r.totalTime
                 FROM (
                     SELECT USERId, SUM(dailyTime) AS totalTime
                     FROM record
@@ -39,7 +39,8 @@ const record = {
                     ORDER BY totalTime DESC
                     LIMIT 3
                 ) r
-                JOIN USER u ON r.USERId = u.USERId;`,
+                JOIN USER u ON r.USERId = u.USERId
+                ORDER BY r.totalTime DESC;`,
                 [`${year}-${month}-01`, `${year}-${month}-31`]
             );
             return result;
@@ -48,34 +49,33 @@ const record = {
             throw error;
         }
     },
-
     viewMyRank: async function (id, year, month) {
         try {
-            const [result] = await mysql.query(
-                `SELECT u.Nickname, r.totalTime, r.rank
-                FROM (
+            const query = `
+                SELECT u.USERId, u.Nickname, COALESCE(r.totalTime, 0) AS totalTime, COALESCE(r.rank, 0) AS rank
+                FROM USER u
+                LEFT JOIN (
                     SELECT USERId, SUM(dailyTime) AS totalTime,
                     RANK() OVER (ORDER BY SUM(dailyTime) DESC) as rank
                     FROM record
                     WHERE date BETWEEN ? AND ?
                     GROUP BY USERId
-                ) r
-                JOIN USER u ON r.USERId = u.USERId;`,
-                [`${year}-${month}-01`, `${year}-${month}-31`]
-            );
-            const userRecord = result.find(record => record.USERId === id);
-            if (userRecord) {
-                return userRecord;
-            } else {
-                return null;
-            }
+                ) r ON u.USERId = r.USERId;
+            `;
+            
+            const startDate = `${year}-${month}-01`;
+            const endDate = `${year}-${month}-31`;
+            
+            const [results] = await mysql.query(query, [startDate, endDate]);
+            console.log(results);
+            
+            const userRecord = results.find(record => record.USERId === id);
+            return userRecord || null;
         } catch (error) {
-            console.log("record: 내 랭킹 조회 오류 발생");
+            console.error("record: 내 랭킹 조회 오류 발생", error);
             throw error;
         }
-    },
-
-
+    },    
     record: async function (id, dailyTime) {
         try {
             // 시작 시간 계산
