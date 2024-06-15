@@ -28,6 +28,7 @@ const commentController = {
 
     GetComment: async (req, res) => {
         const postId = req.body;
+        console.log("getComment postId: " + postId)
         try {
             const result = await comment.getComment(postId);
             res.json(result);
