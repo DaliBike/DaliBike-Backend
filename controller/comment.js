@@ -19,7 +19,7 @@ const commentController = {
         try {
             const result = await comment.deleteComment(id);
             if (result)     res.json({ "result": "success" });
-            else            res.json({ "result": "sibal" });
+            else            res.json({ "result": "can't delete comment" });
         } catch (err) {
             console.log("comment: 댓글 삭제 컨트롤러 오류")
             res.json({ "result": "error" });
