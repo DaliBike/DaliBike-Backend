@@ -83,7 +83,7 @@ const postController = {
         const { PostId, likeNum } = req.body;
         try {
             const result = await post.likePost(PostId, likeNum);
-            res.json(result);
+            res.status(200).json({ "result": "success" });
         } catch (err) {
             console.error("post: 게시글 좋아요 컨트롤러 오류", err);
             res.status(500).json({ error: '게시글 좋아요 작업 중 오류 발생' });
