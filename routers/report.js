@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const schedule = require('node-schedule');
 const reportController = require("../controller/report");
 const multer = require("multer");
 const path = require('path');
@@ -41,6 +42,11 @@ const test = multer(
         }),
     }
 );
+
+schedule.scheduleJob('0 0 * * * *', async function() {reportController.registerAutoApprove();});
+schedule.scheduleJob('0 0 * * * *', async function() {reportController.registerAutoReject();});
+schedule.scheduleJob('0 0 * * * *', async function() {reportController.removalAutoApprove();});
+schedule.scheduleJob('0 0 * * * *', async function() {reportController.removalAutoReject();});
 
 router.post("/add", upload.single('image'), reportController.addReport);
 router.post("/addRemoval", uploadRemoval.single('image'), reportController.addReportRemoval);
