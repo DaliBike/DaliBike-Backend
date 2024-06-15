@@ -22,7 +22,7 @@ const comment = {
                 "DELETE FROM Comment WHERE CommentId =?",
                 [commentId]
             );
-            return result;
+            return true;
         } catch (err) {
             console.log("post: 댓글 삭제 모델 오류 발생");
         }

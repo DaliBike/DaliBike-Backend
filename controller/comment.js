@@ -3,6 +3,7 @@ const comment = require("../model/comment");
 const commentController = {
     WriteComment: async (req, res) => {
         const {postId, userId, ment} = req.body;
+        console.log(postId, userId, ment)
         try {
             const result = await comment.writeComment(postId, userId, ment);
             res.status(200).json({ "result": "success" });
@@ -17,7 +18,8 @@ const commentController = {
         const postId = req.body;
         try {
             const result = await comment.deleteComment(id);
-            res.json(result);
+            if (result)     res.json({ "result": "success" });
+            else            res.json({ "result": "sibal" });
         } catch (err) {
             console.log("comment: 댓글 삭제 컨트롤러 오류")
             res.json({ "result": "error" });
