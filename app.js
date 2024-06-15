@@ -13,6 +13,7 @@ const mapRouter = require("./routers/map")
 const postRouter = require("./routers/post");
 const reportRouter = require("./routers/report");
 const managerRouter = require("./routers/manager");
+const commentRouter = require("./routers/comment");
 
 //schedule.scheduleJob('* * * * * *', async function() {reportController.registerAutoApprove();});
 app.use(express.static('/'));
@@ -22,6 +23,7 @@ app.use("/map", mapRouter);
 app.use("/post", postRouter);
 app.use("/report", reportRouter);
 app.use("/manager", managerRouter);
+app.use("/comment", commentRouter);
 
 
 app.set("view engine", "ejs");

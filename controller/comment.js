@@ -2,10 +2,10 @@ const comment = require("../model/comment");
 
 const commentController = {
     WriteComment: async (req, res) => {
-        const {postId, ment} = req.body;
+        const {postId, userId, ment} = req.body;
         try {
-            const result = await comment.writeComment(postId, ment);
-            res.json(result);
+            const result = await comment.writeComment(postId, userId, ment);
+            res.status(200).json({ "result": "success" });
         } catch (err) {
             console.log("comment: 댓글 작성 컨트롤러 오류")
             res.json({ "result": "error" });

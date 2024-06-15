@@ -5,13 +5,13 @@ const mysql = require('./config.js');
 
 const comment = {
     //댓글
-    writeComment: async function (postId, comment) {
+    writeComment: async function (postId, userId, comment) {
         try {
-            const [result] = await mysql.query(
-                "INSERT INTO Comment (PostId, Comment) VALUES (?,?)",
-                [postId, comment]
+            await mysql.query(
+                "INSERT INTO Comment (PostId, USERId, Comment) VALUES (?,?,?)",
+                [postId, userId, comment]
             );
-            return result;
+            return true;
         } catch (err) {
             console.log("post: 댓글 작성 모델 오류 발생");
         }
