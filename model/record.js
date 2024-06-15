@@ -52,15 +52,15 @@ const record = {
     viewMyRank: async function (id, year, month) {
         try {
             const [result] = await mysql.query(
-                `SELECT u.Nickname, r.totalTime, r.rank
-                FROM (
+                `SELECT u.Nickname, COALESCE(r.totalTime, 0) AS totalTime, COALESCE(r.rank, 0) AS rank
+                FROM USER u
+                LEFT JOIN (
                     SELECT USERId, SUM(dailyTime) AS totalTime,
                     RANK() OVER (ORDER BY SUM(dailyTime) DESC) as rank
                     FROM record
                     WHERE date BETWEEN ? AND ?
                     GROUP BY USERId
-                ) r
-                JOIN USER u ON r.USERId = u.USERId;`,
+                ) r ON u.USERId = r.USERId;`,
                 [`${year}-${month}-01`, `${year}-${month}-31`]
             );
             const userRecord = result.find(record => record.USERId === id);

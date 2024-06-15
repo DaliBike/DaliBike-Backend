@@ -1,4 +1,5 @@
 const record = require("../model/record");
+const user = require("../model/user");
 
 const recordController = {
     viewToday: async (req, res) => {
@@ -41,8 +42,11 @@ const recordController = {
         try {
             const {id, year, month} = req.body;
             const result = await record.viewMyRank(id, year, month);
-            if (result === null)    res.json({"Nickname": id, "totalTime": 0, "rank": 0})
-            else                    res.json(result);
+            if (result === null) {
+                const nickname = await user.myPage(id).length === 0 ? "unknown" : await user.myPage(id)[0].Nickname;
+                res.json({"Nickname": nickname, "totalTime": 0, "rank": 0});
+            }
+            else    res.json(result);
         } catch (err) {
             console.log("record: 내 랭킹 조회 컨트롤러 오류")
             res.json({ "result": "error" });
