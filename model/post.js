@@ -18,7 +18,7 @@ const post = {
     // 카테고리별 게시글 조회
     viewCategoryPost: async function (catergory) {
         try {
-            const [result] = await mysql.query("SELECT p.Title, p.Content, p.Like, u.Nickname FROM Post p JOIN USER u ON p.USERId = u.USERId WHERE p.Category =?", [catergory]);
+            const [result] = await mysql.query("SELECT p.Title, p.Content, p.Like,(SELECT COUNT(c.CommentId) FROM Comment c WHERE c.PostId = p.PostId) AS CommentCount FROM Post p WHERE p.Category = ?", [catergory]);
             return result;
         } catch (err) {
             console.log("post: 카테고리별 조회 모델 오류 발생");
@@ -32,7 +32,7 @@ const post = {
             return result;
         } catch(err){
             console.log("post: 내 게시글 조회 모델 오류 발생");
-        }
+        }   
     },
 
     // 게시글 선택 후 조회

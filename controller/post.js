@@ -57,6 +57,8 @@ const postController = {
 
     InsertPost: async (req, res) => {
         const {userId, categoryId, title, content} = req.body;
+        console.log("Insert control body:", (req.body));
+
         try {
             await post.insertPost(userId, categoryId, title, content);
             res.json({ result: 'true' });
