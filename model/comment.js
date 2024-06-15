@@ -12,7 +12,7 @@ const comment = {
             );
             return true;
         } catch (err) {
-            console.log("post: 댓글 작성 모델 오류 발생");
+            console.log("post: 댓글 작성 모델 오류 발생 " + err);
         }
     },
 
@@ -22,9 +22,9 @@ const comment = {
                 "DELETE FROM Comment WHERE CommentId =?",
                 [commentId]
             );
-            return result;
+            return true;
         } catch (err) {
-            console.log("post: 댓글 삭제 모델 오류 발생");
+            console.log("post: 댓글 삭제 모델 오류 발생 " + err);
         }
     },
 
