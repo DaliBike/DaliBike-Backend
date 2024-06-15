@@ -5,4 +5,4 @@ const commentController = require("../controller/comment");
 
 router.post('/writeComment', commentController.WriteComment);
 router.post('/deleteComment', commentController.DeleteComment);
-router.post('/getComment/', commentController.GetComment);
+router.post('/getComment', commentController.GetComment);
