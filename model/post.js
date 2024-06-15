@@ -7,7 +7,7 @@ const post = {
     viewAllPost: async function () {
         try {
             // const [result] = await mysql.query("SELECT p.Title, p.Content, p.Like, p.Category, u.Nickname COUNT(*) AS CommentCount FROM Comment c JOIN Post p ON c.PostId = p.PostId;FROM Post p JOIN USER u ON p.USERId = u.USERId;");
-            const [result] = await mysql.query("SELECT p.Title, p.Content, p.Like, p.Category, u.Nickname, COUNT(c.CommentId) AS CommentCount FROM Post p JOIN USER u ON p.USERId = u.USERId LEFT JOIN Comment c ON p.PostId = c.PostId GROUP BY p.PostId, p.Title, p.Content, p.Like, p.Category, u.Nickname;");
+            const [result] = await mysql.query("SELECT p.Title, p.Content, p.Like, p.Category, u.Nickname, COUNT(c.CommentId) AS CommentCount FROM Post p JOIN USER u ON p.USERId = u.USERId LEFT JOIN Comment c ON p.PostId = c.PostId GROUP BY p.PostId, p.Title, p.Content, p.Like, p.Category, u.Nickname ORDER BY p.PostId DESC;");
             return result;
         } catch (err) {
             console.log("post: 전체 조회 모델 오류 발생");
@@ -18,7 +18,7 @@ const post = {
     // 카테고리별 게시글 조회
     viewCategoryPost: async function (catergory) {
         try {
-            const [result] = await mysql.query("SELECT p.Title, p.Content, p.Like,(SELECT COUNT(c.CommentId) FROM Comment c WHERE c.PostId = p.PostId) AS CommentCount FROM Post p WHERE p.Category = ?", [catergory]);
+            const [result] = await mysql.query("SELECT p.Title, p.Content, p.Like, (SELECT COUNT(c.CommentId) FROM Comment c WHERE c.PostId = p.PostId) AS CommentCount FROM Post p WHERE p.Category = ? ORDER BY p.PostId DESC", [catergory]);
             return result;
         } catch (err) {
             console.log("post: 카테고리별 조회 모델 오류 발생");
@@ -83,7 +83,7 @@ const post = {
     //인기 게시물 조회
     viewHotPosts: async function () {
         try {
-            const [result] = await mysql.query("SELECT Title, `Like` FROM `Post` ORDER BY `Like` DESC LIMIT 6;");
+            const [result] = await mysql.query("SELECT Title, Content, `Like` FROM `Post` ORDER BY `Like` DESC;");
             return result;
         } catch (err) {
             console.log("post: 인기 게시글 조회 모델 오류 발생");

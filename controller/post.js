@@ -98,9 +98,7 @@ const postController = {
             console.log("post: 게시글 좋아요 컨트롤러 오류");
             res.json({ "result": "error" });
         }
-    }
-
-    
+    }    
 }
 
 module.exports = postController;
