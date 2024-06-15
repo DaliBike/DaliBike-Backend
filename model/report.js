@@ -182,7 +182,7 @@ const report = {
     },
     registerAutoApprove: async function() {
         try {
-            const [reportList] = await this.getManagerReportList();
+            const reportList = await this.getManagerReportList();
             console.log(reportList)
     
             // 각 제보에 대해 인근 제보가 5개 이상인 경우 자동 승인
@@ -194,7 +194,7 @@ const report = {
                 // 해당 제보에 대해 인근 동일 제보의 개수를 가져옵니다.
                 const [nearbySameReports] = await this.getNumOfNearbySameReports(reportId, type);
     
-                if (nearbySameReports) {
+                if (nearbySameReports != null) {
                     const numberOfReports = nearbySameReports.count;
     
                     // 인근 동일 제보가 5개 이상인 경우에만 자동 승인 절차를 진행합니다.
@@ -323,36 +323,40 @@ const report = {
     removalAutoApprove: async function() {
         try {
             // 제보 삭제 요청 목록을 가져옵니다.
-            const [removalRequests] = await this.getManagerDeleteReportList();
+            const removalRequests = await this.getManagerDeleteReportList();
     
             // 각 삭제 요청에 대해 처리합니다.
             for (const request of removalRequests) {
                 const reportId = request.reportId;
                 const userId = request.USERId;
                 const type = request.type;
+                
+                const [exists] = await mysql.query("SELECT * AS count FROM report WHERE reportId = ? AND USERId = ?", [reportId, userId]);
+
+                if (exists.length !== 0) {
+                    // 해당 제보에 대해 인근 동일 삭제 요청의 개수를 가져옵니다.
+                    const [nearbySameRemovalRequests] = await mysql.query(
+                        "SELECT COUNT(*) as count FROM reportRemovalRequest WHERE reportId = ? AND USERId != ?",
+                        [reportId, userId]
+                    );
     
-                // 해당 제보에 대해 인근 동일 삭제 요청의 개수를 가져옵니다.
-                const [nearbySameRemovalRequests] = await mysql.query(
-                    "SELECT COUNT(*) as count FROM reportRemovalRequest WHERE reportId = ? AND USERId != ?",
-                    [reportId, userId]
-                );
+                    if (nearbySameRemovalRequests) {
+                        const numberOfRequests = nearbySameRemovalRequests[0].count;
+                        
+                        // 인근 동일 삭제 요청이 5개 이상인 경우에만 자동 승인 절차를 진행합니다.
+                        if (numberOfRequests >= 5) {
+                            // 해당 제보 삭제 요청을 자동으로 승인 처리합니다.
+                            await this.removalApprove(reportId, userId);
+                            
+                            // 인근 동일 삭제 요청들에 대해서도 자동 승인 처리를 반복합니다.
+                            const [restNearbySameRemovalRequests] = await mysql.query(
+                                "SELECT USERId FROM reportRemovalRequest WHERE reportId = ? AND USERId != ?",
+                                [reportId, userId]
+                            );
     
-                if (nearbySameRemovalRequests) {
-                    const numberOfRequests = nearbySameRemovalRequests[0].count;
-    
-                    // 인근 동일 삭제 요청이 5개 이상인 경우에만 자동 승인 절차를 진행합니다.
-                    if (numberOfRequests >= 5) {
-                        // 해당 제보 삭제 요청을 자동으로 승인 처리합니다.
-                        await this.removalApprove(reportId, userId);
-    
-                        // 인근 동일 삭제 요청들에 대해서도 자동 승인 처리를 반복합니다.
-                        const [restNearbySameRemovalRequests] = await mysql.query(
-                            "SELECT USERId FROM reportRemovalRequest WHERE reportId = ? AND USERId != ?",
-                            [reportId, userId]
-                        );
-    
-                        for (const restRequest of restNearbySameRemovalRequests) {
-                            await this.removalApprove(reportId, restRequest.USERId);
+                            for (const restRequest of restNearbySameRemovalRequests) {
+                                await this.removalApprove(reportId, restRequest.USERId);
+                            }
                         }
                     }
                 }

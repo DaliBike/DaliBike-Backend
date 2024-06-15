@@ -43,11 +43,10 @@ const test = multer(
     }
 );
 
-schedule.scheduleJob('* * * * * *', async function() {reportController.registerAutoApprove();});
-//schedule.scheduleJob('* * * * * *', async function() {reportController.registerAutoReject();});
-//schedule.scheduleJob('* * * * * *', async function() {reportController.removalAutoApprove();});
-//schedule.scheduleJob('* * * * * *', async function() {reportController.removalAutoReject();});
-
+schedule.scheduleJob('0 0 * * * *', async function() {reportController.registerAutoApprove();});
+schedule.scheduleJob('0 0 * * * *', async function() {reportController.registerAutoReject();});
+schedule.scheduleJob('0 0 * * * *', async function() {reportController.removalAutoApprove();});
+schedule.scheduleJob('0 0 * * * *', async function() {reportController.removalAutoReject();});
 
 router.post("/add", upload.single('image'), reportController.addReport);
 router.post("/addRemoval", uploadRemoval.single('image'), reportController.addReportRemoval);
