@@ -71,14 +71,16 @@ const post = {
     },
 
     //게시글 좋아요
-    likePost: async function (postId) {
+    likePost: async function (postId, likeNum) {
         try {
-            const [result] = await mysql.query("UPDATE `Post`SET `Like` = `Like` + 1 WHERE `PostId` = ?;", [postId]);
+            const [result] = await mysql.query("UPDATE `Post` SET `Like` = `Like` + ? WHERE `PostId` = ?;", [likeNum, postId]);
             return result;
         } catch (err) {
-            console.log("post: 게시글 좋아요 모델 오류 발생");
+            console.log("post: 게시글 좋아요 모델 오류 발생", err);
+            throw err; // 에러를 다시 던져서 컨트롤러에서 처리할 수 있게 합니다.
         }
     },
+    
     
     //인기 게시물 조회
     viewHotPosts: async function () {

@@ -80,15 +80,15 @@ const postController = {
     },
 
     LikePost: async (req, res) => {
-        const postId = req.params.postId;
+        const { PostId, likeNum } = req.body;
         try {
-            const result = await post.likePost(postId);
+            const result = await post.likePost(PostId, likeNum);
             res.json(result);
         } catch (err) {
-            console.log("post: 게시글 좋아요 컨트롤러 오류");
-            res.json({ "result": "error" });
+            console.error("post: 게시글 좋아요 컨트롤러 오류", err);
+            res.status(500).json({ error: '게시글 좋아요 작업 중 오류 발생' });
         }
-    },
+    },   
     
     ViewHotPosts: async (req, res) => {
         try {
