@@ -30,7 +30,7 @@ const record = {
     viewRank: async function (year, month) {
         try {
             const [result] = await mysql.query(
-                    `SELECT u.Nickname, r.totalTime
+                `SELECT u.Nickname, r.totalTime
                 FROM (
                     SELECT USERId, SUM(dailyTime) AS totalTime
                     FROM record
@@ -39,7 +39,8 @@ const record = {
                     ORDER BY totalTime DESC
                     LIMIT 3
                 ) r
-                JOIN USER u ON r.USERId = u.USERId;`,
+                JOIN USER u ON r.USERId = u.USERId
+                ORDER BY r.totalTime DESC;`,
                 [`${year}-${month}-01`, `${year}-${month}-31`]
             );
             return result;
