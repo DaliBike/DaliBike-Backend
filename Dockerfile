@@ -1,4 +1,4 @@
-# Node.js 20.12.2 버전의 공식 이미지 사용
+# Node.js 20.12.2 버전의 공식 이미지 사용할거임!!
 FROM node:20.12.2
 
 # npm install을 위해 package.json과 package-lock.json을 먼저 복사
