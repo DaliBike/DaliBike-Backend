@@ -48,11 +48,10 @@ const record = {
             throw error;
         }
     },
-
     viewMyRank: async function (id, year, month) {
         try {
-            const [result] = await mysql.query(
-                `SELECT u.Nickname, COALESCE(r.totalTime, 0) AS totalTime, COALESCE(r.rank, 0) AS rank
+            const query = `
+                SELECT u.USERId, u.Nickname, COALESCE(r.totalTime, 0) AS totalTime, COALESCE(r.rank, 0) AS rank
                 FROM USER u
                 LEFT JOIN (
                     SELECT USERId, SUM(dailyTime) AS totalTime,
@@ -60,22 +59,22 @@ const record = {
                     FROM record
                     WHERE date BETWEEN ? AND ?
                     GROUP BY USERId
-                ) r ON u.USERId = r.USERId;`,
-                [`${year}-${month}-01`, `${year}-${month}-31`]
-            );
-            const userRecord = result.find(record => record.USERId === id);
-            if (userRecord) {
-                return userRecord;
-            } else {
-                return null;
-            }
+                ) r ON u.USERId = r.USERId;
+            `;
+            
+            const startDate = `${year}-${month}-01`;
+            const endDate = `${year}-${month}-31`;
+            
+            const [results] = await mysql.query(query, [startDate, endDate]);
+            console.log(results);
+            
+            const userRecord = results.find(record => record.USERId === id);
+            return userRecord || null;
         } catch (error) {
-            console.log("record: 내 랭킹 조회 오류 발생");
+            console.error("record: 내 랭킹 조회 오류 발생", error);
             throw error;
         }
-    },
-
-
+    },    
     record: async function (id, dailyTime) {
         try {
             // 시작 시간 계산

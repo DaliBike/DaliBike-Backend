@@ -40,11 +40,13 @@ const recordController = {
 
     viewMyRank: async (req, res) => {
         try {
-            const {id, year, month} = req.body;
-            const result = await record.viewMyRank(id, year, month);
+            const {USERId, year, month} = req.body;
+            console.log(USERId, year, month);
+            const result = await record.viewMyRank(USERId, year, month);
+            console.log(result);
             if (result === null) {
-                const nickname = await user.myPage(id).length === 0 ? "unknown" : await user.myPage(id)[0].Nickname;
-                res.json({"Nickname": nickname, "totalTime": 0, "rank": 0});
+                const nickname = await user.myPage(USERId).length === 0 ? "unknown" : await user.myPage(USERId)[0].Nickname;
+                res.json({"USERId": USERId, "Nickname": nickname, "totalTime": 0, "rank": 0});
             }
             else    res.json(result);
         } catch (err) {
