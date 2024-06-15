@@ -12,7 +12,8 @@ router.post("/upload", postController.InsertPost)   // 게시글 등록
 router.delete("/delete/:postId", postController.DeletePost) // 게시글 삭제
 router.post("/like", postController.LikePost); // 게시글 좋아요
 
-router.post("/get/likeComment/:postId", postController.GetLikeComment) // 게시글 좋아요 가져오기
+router.post("/get/likeComment", postController.GetLikeComment) // 게시글 좋아요 가져오기
+router.post("/get/likeCommentAmount", postController.getLikeCommentAmount) // 게시글 좋아요 수 가져오기
 
 
 module.exports = router;

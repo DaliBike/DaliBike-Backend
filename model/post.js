@@ -99,6 +99,15 @@ const post = {
             console.log("post: 인기 게시글 조회 모델 오류 발생", err);
             throw err; // 오류를 던져서 컨트롤러에서 캐치할 수 있게 함
         }
+    },
+    getLikeCommentAmount : async function(postId) {
+        try {
+            const [result] = await mysql.query("SELECT `Like`, (SELECT COUNT(*) FROM Comment WHERE PostId = ?) AS CommentCount FROM Post WHERE PostId = ?;", [postId, postId]);
+            return result;
+        } catch (err) {
+            console.log("post: 게시글 좋아요 모델 오류", err);
+            throw err;
+        }
     }
 
 }
