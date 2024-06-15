@@ -28,7 +28,7 @@ const post = {
     
     viewMyPost: async function (userId) {
         try{
-            const [result] = await mysql.query("SELECT p.PostId, p.Title, p.Content, p.Like, p.Category, u.Nickname FROM Post p JOIN USER u ON p.USERId = u.USERId WHERE u.USERId =?", [userId]);
+            const [result] = await mysql.query("SELECT p.PostId, p.Title, p.Content, p.Like, p.Category, u.Nickname FROM Post p JOIN USER u ON p.USERId = u.USERId WHERE u.USERId =? ORDER BY p.PostId DESC", [userId]);
             return result;
         } catch(err){
             console.log("post: 내 게시글 조회 모델 오류 발생");
