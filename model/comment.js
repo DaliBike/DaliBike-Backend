@@ -36,7 +36,7 @@ const comment = {
             );
             return result;
         } catch (err) {
-            console.log("post: 댓글 조회 모델 오류 발생");
+            console.log("post: 댓글 조회 모델 오류 발생 " + err);
         }
     }
 
