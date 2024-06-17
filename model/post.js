@@ -28,7 +28,7 @@ const post = {
     
     viewMyPost: async function (userId) {
         try{
-            const [result] = await mysql.query("SELECT p.PostId, p.Title, p.Content, p.Like, p.Category, u.Nickname FROM Post p JOIN USER u ON p.USERId = u.USERId WHERE u.USERId =? ORDER BY p.PostId DESC", [userId]);
+            const [result] = await mysql.query("SELECT p.PostId, p.Title, p.Content, p.Like, p.Category, u.Nickname, COUNT(c.CommentId) AS CommentCount FROM Post p JOIN USER u ON p.USERId = u.USERId LEFT JOIN Comment c ON p.PostId = c.PostId WHERE u.USERId = ? GROUP BY p.PostId, p.Title, p.Content, p.Like, p.Category, u.Nickname ORDER BY p.PostId DESC;", [userId]);
             return result;
         } catch(err){
             console.log("post: 내 게시글 조회 모델 오류 발생");
@@ -85,7 +85,7 @@ const post = {
     //인기 게시물 조회
     viewHotPosts: async function () {
         try {
-            const [result] = await mysql.query("SELECT PostId, Title, Content, `Like` FROM `Post` WHERE `Like` >= 10 ORDER BY `Like` DESC;");
+            const [result] = await mysql.query("SELECT p.PostId, p.Title, p.Content, p.`Like`, COUNT(c.CommentId) AS CommentCount FROM `Post` p LEFT JOIN `Comment` c ON p.PostId = c.PostId GROUP BY p.PostId, p.Title, p.Content, p.`Like` ORDER BY p.`Like` DESC;");
             return result;
         } catch (err) {
             console.log("post: 인기 게시글 조회 모델 오류 발생");
