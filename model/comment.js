@@ -31,7 +31,7 @@ const comment = {
     getComment: async function (postId) {
         try {
             const [result] = await mysql.query(
-                "SELECT u.Nickname, c.Comment FROM Comment AS c JOIN USER AS u ON c.USERId = u.USERId WHERE c.PostId = ? ORDER BY c.date DESC",
+                "SELECT u.Nickname, c.Comment FROM Comment AS c JOIN USER AS u ON c.USERId = u.USERId WHERE c.PostId = ? ORDER BY c.date ASC",
                 [postId]
             );
             return result;
