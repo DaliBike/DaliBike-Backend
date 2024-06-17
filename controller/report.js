@@ -29,7 +29,7 @@ const reportController = {
                 }
                 else {
                     res.status(400).json({ "result": "approved report exists" });
-                    throw new Error("이미 승인된 제보가 있습니다.");
+                    throw new Error("주변에 이미 승인된 제보가 있습니다.");
                 }
             }
         } catch (error) {
@@ -37,7 +37,10 @@ const reportController = {
             if (error.message !== "이미지가 없습니다.") {
                 await report.deleteImage(req.file.path);
             }
-             res.status(500).json({ "result": "error" });           
+            if (error.message !== "한 유저가 같은 위치의 요소를 두 번 이상 신고할 수 없습니다."
+                && error.message !== "주변에 이미 승인된 제보가 있습니다.") {            
+                res.status(500).json({ "result": "server error" });
+            }
         }
     },
     addReportRemoval : async function(req, res) {
@@ -67,7 +70,9 @@ const reportController = {
             if (error.message !== "이미지가 없습니다.") {
                 await report.deleteImage(req.file.path);
             }
-            res.status(500).json({ "result": "error" });
+            if (error.message !== "한 유저가 같은 위치의 요소를 두 번 이상 신고할 수 없습니다.") {            
+                res.status(500).json({ "result": "server error" })
+            }
         }
     },
     getReportDetails : async function(req, res) {
