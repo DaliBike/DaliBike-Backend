@@ -83,7 +83,7 @@ const postController = {
         const { PostId, likeNum } = req.body;
         try {
             const result = await post.likePost(PostId, likeNum);
-            res.json(result);
+            res.status(200).json({ "result": "success" });
         } catch (err) {
             console.error("post: 게시글 좋아요 컨트롤러 오류", err);
             res.status(500).json({ error: '게시글 좋아요 작업 중 오류 발생' });
@@ -98,7 +98,17 @@ const postController = {
             console.log("post: 게시글 좋아요 컨트롤러 오류");
             res.json({ "result": "error" });
         }
-    }    ,
+    },
+    getLikeCommentAmount : async (req, res) => {
+        try {
+            const { postId } = req.body;
+            const result = await post.getLikeCommentAmount(postId);
+            res.json(result);
+        } catch (err) {
+            console.log("post: 게시글 좋아요 컨트롤러 오류", err);
+            res.json({ "result": "error" });
+        }
+    },
     GetLikeComment: async (req, res) => {
         const postId = req.params.postId; // 구조 분해 할당에서 수정
         try {
