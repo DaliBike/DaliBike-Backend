@@ -37,9 +37,7 @@ const reportController = {
             if (error.message !== "이미지가 없습니다.") {
                 await report.deleteImage(req.file.path);
             }
-            if (error.message == "한 유저가 같은 위치의 요소를 두 번 이상 신고할 수 없습니다.") {            
-                res.status(500).json({ "result": "error" });
-            }
+             res.status(500).json({ "result": "error" });           
         }
     },
     addReportRemoval : async function(req, res) {
@@ -69,9 +67,7 @@ const reportController = {
             if (error.message !== "이미지가 없습니다.") {
                 await report.deleteImage(req.file.path);
             }
-            if (error.message == "한 유저가 같은 위치의 요소를 두 번 이상 신고할 수 없습니다.") {            
-                res.status(500).json({ "result": "error" });
-            }
+            res.status(500).json({ "result": "error" });
         }
     },
     getReportDetails : async function(req, res) {
