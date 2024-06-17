@@ -20,6 +20,12 @@ const record = {
                 "SELECT * FROM record WHERE USERId = ? AND date BETWEEN ? AND ? ORDER BY date ASC",
                 [id, `${year}-${month}-01`, `${year}-${month}-${lastDate}`]
             );
+            // 한국 시간(+9시간)으로 변환
+            result.forEach(item => {
+                const koreanDate = new Date(item.date);
+                koreanDate.setHours(koreanDate.getHours() + 9);
+                item.date = koreanDate.toISOString();
+            });
             return result;
         } catch (error) {
             console.log("record: 월별 기록 조회 오류 발생");

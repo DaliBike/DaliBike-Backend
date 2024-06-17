@@ -35,6 +35,11 @@ const user = {
     myPage : async function(id) {
         try {
             const [result] = await mysql.query("SELECT USERId, Name, Nickname, Points, subDate FROM USER WHERE USERId = ?", [id]);
+            result.forEach(item => {
+                const koreanDate = new Date(item.subDate);
+                koreanDate.setHours(koreanDate.getHours() + 9);
+                item.subDate = koreanDate.toISOString();
+            });
             return result;
         } catch (error) {
             console.log("user: mypage 조회 오류 발생");
