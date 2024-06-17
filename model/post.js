@@ -85,7 +85,7 @@ const post = {
     //인기 게시물 조회
     viewHotPosts: async function () {
         try {
-            const [result] = await mysql.query("SELECT PostId, Title, Content, `Like` FROM `Post` ORDER BY `Like` DESC;");
+            const [result] = await mysql.query("SELECT PostId, Title, Content, `Like` FROM `Post` WHERE `Like` >= 10 ORDER BY `Like` DESC;");
             return result;
         } catch (err) {
             console.log("post: 인기 게시글 조회 모델 오류 발생");
