@@ -34,15 +34,11 @@ const reportController = {
             }
         } catch (error) {
             console.log("report: addReport controller 오류 발생" + error);
-            if (error.message === "이미지가 없습니다.") {
+            if (error.message !== "이미지가 없습니다.") {
                 await report.deleteImage(req.file.path);
-                res.status(500).json({ "result": "server error" });
-            } else if (error.message === "한 유저가 같은 위치의 요소를 두 번 이상 신고할 수 없습니다.") {
-                res.status(404).json({ "result": "error" });
-            } else if (error.message === "이미 승인된 제보가 있습니다.") {
-                res.status(404).json({ "result": "server error" });
-            } else {
-                res.status(500).json({ "result": "server error" });
+            }
+            if (error.message == "한 유저가 같은 위치의 요소를 두 번 이상 신고할 수 없습니다.") {            
+                res.status(500).json({ "result": "error" });
             }
         }
     },
@@ -69,15 +65,12 @@ const reportController = {
                 throw new Error("한 유저가 같은 위치의 요소를 두 번 이상 신고할 수 없습니다.");
             }
         } catch (error) {
-            if (error.message === "이미지가 없습니다.") {
+            console.log("report: addReportRemoval controller 오류 발생" + error);
+            if (error.message !== "이미지가 없습니다.") {
                 await report.deleteImage(req.file.path);
-                res.status(500).json({ "result": "server error" });
-            } else if (error.message === "한 유저가 같은 위치의 요소를 두 번 이상 신고할 수 없습니다.") {
-                res.status(404).json({ "result": "error" });
-            } else if (error.message === "이미 승인된 제보가 있습니다.") {
-                res.status(404).json({ "result": "server error" });
-            } else {
-                res.status(500).json({ "result": "server error" });
+            }
+            if (error.message == "한 유저가 같은 위치의 요소를 두 번 이상 신고할 수 없습니다.") {            
+                res.status(500).json({ "result": "error" });
             }
         }
     },
