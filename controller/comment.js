@@ -36,6 +36,17 @@ const commentController = {
             console.log("comment: 댓글 조회 컨트롤러 오류")
             res.json({ "result": "error" });
         }
+    },
+    GetCommentCount: async (req, res) => {
+        const {postId} = req.params.postId;
+        console.log("getComment postId: " + postId)
+        try {
+            const result = await comment.getCommentCount(postId);
+            res.json(result);
+        } catch (err) {
+            console.log("comment: 댓글 조회 컨트롤러 오류")
+            res.json({ "result": "error" });
+        }
     }
     
 }

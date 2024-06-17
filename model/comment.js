@@ -38,7 +38,20 @@ const comment = {
         } catch (err) {
             console.log("post: 댓글 조회 모델 오류 발생 " + err);
         }
+    },
+    getCommentCount: async function (postId) {
+        try {
+            const [result] = await mysql.query(
+                "SELECT COUNT(*) AS commentCount FROM Comment WHERE PostId = ?",
+                [postId]
+            );
+            return result[0].commentCount; // 결과가 배열이므로 첫 번째 요소의 commentCount 값을 반환합니다.
+        } catch (err) {
+            console.log("post: 댓글 조회 모델 오류 " + err);
+            throw err;
+        }
     }
+    
 
 }
 
