@@ -85,7 +85,14 @@ const post = {
     //인기 게시물 조회
     viewHotPosts: async function () {
         try {
-            const [result] = await mysql.query("SELECT p.PostId, p.Title, p.Content, p.`Like`, COUNT(c.CommentId) AS CommentCount FROM `Post` p LEFT JOIN `Comment` c ON p.PostId = c.PostId GROUP BY p.PostId, p.Title, p.Content, p.`Like` ORDER BY p.`Like` DESC;");
+            const [result] = await mysql.query(`
+                SELECT p.PostId, p.Title, p.Content, p.\`Like\`, COUNT(c.CommentId) AS CommentCount 
+                FROM \`Post\` p 
+                LEFT JOIN \`Comment\` c ON p.PostId = c.PostId 
+                WHERE p.\`Like\` >= 10 
+                GROUP BY p.PostId, p.Title, p.Content, p.\`Like\` 
+                ORDER BY p.\`Like\` DESC;
+            `);
             return result;
         } catch (err) {
             console.log("post: 인기 게시글 조회 모델 오류 발생");
